@@ -1,6 +1,8 @@
 const canvas = document.getElementById("matter-canvas");
 const HEIGHT = 500; //screen.height;
 const WIDTH = 500; //screen.width;
+const GRAVITY = 1;
+let g = GRAVITY;
 
 var Engine = Matter.Engine;
 var World = Matter.World;
@@ -97,20 +99,19 @@ let restart = () => {
   // Matter.js エンジン起動
   runner = Engine.run(engine);
   running = false;
+  g = use_gravity.checked ? GRAVITY : 0;
   start();
-  console.log("reset");
 };
 
 let running = false;
 let start = () => {
   running = !running;
   if (running) {
-    console.log(objects)
     for (var i in objects) {
       Body.setVelocity(objects[i], velocities[i]);
       Body.setAngularVelocity(objects[i], angular_velocities[i]);
     }
-    engine.world.gravity.y = 1;
+    engine.world.gravity.y = g;
   } else {
     for (var i in objects) {
       var obj = objects[i];
@@ -127,6 +128,6 @@ start_btn = document.getElementById("start-btn");
 start_btn.onclick = start;
 reset_btn = document.getElementById("reset-btn");
 reset_btn.onclick = restart;
-
-
+use_gravity = document.getElementById("gravity-check");
+use_gravity.checked = true;
 restart ();
