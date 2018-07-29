@@ -11,3 +11,41 @@ button {
 #button-div {
   display: flex;
 }
+
+#setting-btn {
+  position: absolute;
+  width: 60px;
+  height : 60px;
+  right: 5px;
+  top: 5px;
+}
+
+#setting-frame {
+  position: absolute;
+  background-color: rgba(#fff, .9);
+  top: 0%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+  z-index: 10;
+  overflow: scroll;
+  #white-frame {
+    position: absolute;
+    background-color: rgba(#fff, 1);
+    border: 3px solid #000000; 
+    top: 15%;
+    bottom: 15%;
+    left: 15%;
+    right: 15%;
+    #setting-close-btn {
+      position: absolute;
+      width: 60px;
+      height : 60px;
+      right: 5px;
+      top: 5px;
+      z-index: 11;
+    }
+  }
+}
+
+

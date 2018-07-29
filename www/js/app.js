@@ -173,10 +173,28 @@ let start = () => {
   }
 }
 
-start_btn = document.getElementById("start-btn");
+let is_setting_open = false;
+let show_setting = () => {
+  is_setting_open = !is_setting_open;
+  if (is_setting_open) {
+    setting_frame.style.display = "none";
+    console.log("none");
+  } else {
+    setting_frame.style.display = "block";    
+  }
+}
+
+let start_btn = document.getElementById("start-btn");
 start_btn.onclick = start;
-reset_btn = document.getElementById("reset-btn");
+let reset_btn = document.getElementById("reset-btn");
 reset_btn.onclick = restart;
-use_gravity = document.getElementById("gravity-check");
+let use_gravity = document.getElementById("gravity-check");
 use_gravity.checked = true;
+let setting_btn = document.getElementById("setting-btn");
+let setting_close_btn = document.getElementById("setting-close-btn");
+setting_btn.onclick = show_setting;
+setting_close_btn.onclick = show_setting;
+let setting_frame = document.getElementById("setting-frame");
+show_setting();
+
 restart ();
