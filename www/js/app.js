@@ -4,8 +4,10 @@ const WIDTH = 500; //screen.width;
 
 var Engine = Matter.Engine;
 var World = Matter.World;
+var Body = Matter.Body;
 var Bodies = Matter.Bodies;
 var Runner = Matter.Runner;
+var Vector = Matter.Vector;
 
 var engine = Engine.create(canvas,
   {
@@ -20,14 +22,36 @@ var engine = Engine.create(canvas,
 let runner = null;
 engine.render.options.wireframeBackground = "#004444";
 
+let objects = [];
+let velocities = [];
+let angular_velocities = [];
 
-let start = () => {
+let init = () => {
   World.clear(engine.world);
   if (runner != null) {
     Runner.stop(runner);
   }
   Engine.clear(engine);
   
+  objects = [];
+  velocities = [];
+  angular_velocities = [];
+}
+
+let add_object = (obj) => {
+  console.log(obj);
+  objects.push(obj);
+  velocities.push(Vector.create(0, 0));
+  angular_velocities.push(0);
+  World.add(engine.world, [obj]);
+}
+let add_objects = (objs) => {
+  for (var obj of objs) add_object(obj);
+}
+
+let restart = () => {
+  init ();
+
   // 二つの箱(四角)と地面を作る
   var boxA = Bodies.rectangle(100, 200, 80, 80, 
     {
@@ -66,12 +90,43 @@ let start = () => {
     });
 
   // 二つの箱(四角)と地面を追加
-  World.add(engine.world, [boxA, boxB, boxC, ground]);
+
+  World.add(engine.world, [ground]);
+  add_objects([boxA, boxB, boxC]);
 
   // Matter.js エンジン起動
   runner = Engine.run(engine);
+  running = false;
+  start();
+  console.log("reset");
 };
 
+let running = false;
+let start = () => {
+  running = !running;
+  if (running) {
+    console.log(objects)
+    for (var i in objects) {
+      Body.setVelocity(objects[i], velocities[i]);
+      Body.setAngularVelocity(objects[i], angular_velocities[i]);
+    }
+    engine.world.gravity.y = 1;
+  } else {
+    for (var i in objects) {
+      var obj = objects[i];
+      velocities[i] = Vector.clone(obj.velocity);
+      angular_velocities[i] = obj.angularVelocity;
+      Body.setVelocity(obj, Vector.create(0, 0));
+      Body.setAngularVelocity(obj, 0);
+    };
+    engine.world.gravity.y = 0;
+  }
+}
+
+start_btn = document.getElementById("start-btn");
+start_btn.onclick = start;
 reset_btn = document.getElementById("reset-btn");
-reset_btn.onclick = start;
-start ();
+reset_btn.onclick = restart;
+
+
+restart ();
