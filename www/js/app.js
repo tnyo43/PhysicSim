@@ -86,6 +86,17 @@ let add_object = (obj) => {
   angular_velocities.push(0);
   masses.push(1);
   World.add(engine.world, [obj]);
+
+  console.log(obj)
+  var op = document.createElement("option");
+  op.text = obj.id;
+  target_obj1_select.add(op);
+  op = document.createElement("option");
+  op.text = obj.id;
+  target_obj2_select.add(op);
+  op = document.createElement("option");
+  op.text = obj.id;
+  set_object_select.add(op);
 }
 let add_objects = (objs) => {
   for (var obj of objs) add_object(obj);
@@ -173,15 +184,32 @@ let start = () => {
   }
 }
 
-let is_setting_open = false;
+let is_setting_open = true;
 let show_setting = () => {
   is_setting_open = !is_setting_open;
-  if (is_setting_open) {
+  if (!is_setting_open) {
     setting_frame.style.display = "none";
-    console.log("none");
   } else {
-    setting_frame.style.display = "block";    
+    set_object_input(0);
   }
+}
+
+let set_object_input = (index) => {
+  var obj = objects[index];
+  posX_input.value = obj.position.x;
+  posY_input.value = obj.position.y;
+  console.log(veloX_input);
+  console.log(obj.velocity.x);
+  veloX_input.value = obj.velocity.x;
+  veloY_input.value = obj.velocity.y;
+  mass_input.value = masses[index];
+  setting_frame.style.display = "block";  
+}
+let update_object_params = (index) => {
+  var obj = objects[index];
+  Body.setPosition(obj, Vector.create(posX_input.value, posY_input.value));
+  velocities[index] = Vector.create(veloX_input.value, veloY_input.value);
+  masses[index] = mass_input.value;
 }
 
 let start_btn = document.getElementById("start-btn");
@@ -196,5 +224,48 @@ setting_btn.onclick = show_setting;
 setting_close_btn.onclick = show_setting;
 let setting_frame = document.getElementById("setting-frame");
 show_setting();
+let target_obj1_select = document.getElementById("obj1-select");
+let target_obj2_select = document.getElementById("obj2-select");
+let target_event_select = document.getElementById("event-select");
+let target_select = document.getElementById("target-select");
+let set_object_select = document.getElementById("obj-select");
+set_object_select.onchange = () => {
+  var id_ = set_object_select.value;
+  for (var i in objects) {
+    if (objects[i].id == id_) {
+      set_object_input(i);
+      break;
+    }
+  }
+}
 
+let posX_input = document.getElementById("posX");
+let posY_input = document.getElementById("posY");
+let sizeH_input = document.getElementById("sizeH");
+let sizeW_input = document.getElementById("sizeW");
+let veloX_input = document.getElementById("veloX");
+let veloY_input = document.getElementById("veloY");
+let mass_input = document.getElementById("obj-mass");
+let param_btn = document.getElementById("param-btn");
+param_btn.onclick = () => {
+  var id_ = set_object_select.value;
+  for (var i in objects) {
+    if (objects[i].id == id_) {
+      update_object_params(i);
+      break;
+    }
+  }
+}
+
+/*
+posX_input
+posY_input
+sizeH_input
+sizeW_input
+veloX_input
+veloY_input
+mass_input
+*/
+
+// start simulation
 restart ();

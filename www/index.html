@@ -16,6 +16,69 @@
   <div id="setting-frame">
     <div id="white-frame">
       <button id="setting-close-btn"></button>
+      <div id="target-div">
+        <p>目標設定</p>
+        <form>
+          <select id="obj1-select" name="object1"></select>
+        </form>
+        <p>が</p>
+        <form>
+          <select id="obj2-select" name="object2"></select>
+        </form>
+        <p>に</p>
+        <form>
+          <select id="event-select" name="event">
+            <option value="1">衝突</option>
+          </select>
+        </form>
+        <p>までの</p>
+        <form>
+          <select id="target-select" name="target">
+            <option value="1">時間</option>
+          </select>
+        </form>
+        
+      </div>
+      <div id="bodies-div">
+        <div id="object_div">
+          <form>
+            <select id="obj-select" name="target"></select>
+          </form>
+        </div>
+        <div id="params_div">
+          <table border="0">
+            <tr>
+              <td align="right"><b>x</b></td>
+              <td><input type="text" id="posX"name="x" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>y</b></td>
+              <td><input type="text" id="posY"name="y" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>高さ</b></td>
+              <td><input type="text" id="sizeH" name="h" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>幅</b></td>
+              <td><input type="text" id="sizeW" name="w" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>速度X</b></td>
+              <td><input type="text" id="veloX" name="velox" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>速度Y</b></td>
+              <td><input type="text" id="veloY" name="veloy" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>質量</b></td>
+              <td><input type="text" id="obj-mass" name="obj-mass" size="30" maxlength="20"></td>
+            </tr>
+          </table>
+          <button id="param-btn">変更</button>
+        </div>
+      </div>
     </div>
   </div>
   <div id="button-div">

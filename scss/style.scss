@@ -22,11 +22,13 @@ button {
 
 #setting-frame {
   position: absolute;
+  display: none;
   background-color: rgba(#fff, .9);
-  top: 0%;
-  bottom: 0%;
-  left: 0%;
-  right: 0%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
   overflow: scroll;
   #white-frame {
@@ -44,6 +46,26 @@ button {
       right: 5px;
       top: 5px;
       z-index: 11;
+    }
+    #target-div, #bodies-div {
+      height: 40%;
+      background-color: gray;
+      margin: 10%;      
+    }
+
+    #bodies-div {
+      display: flex;
+
+      #object_div {
+        flex-grow: 1;
+        flex-basis: 30%;
+      }
+
+      #params_div {
+        flex-grow: 1;
+        flex-basis: 70%;
+      }
+
     }
   }
 }
