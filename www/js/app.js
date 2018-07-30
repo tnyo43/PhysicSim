@@ -50,11 +50,19 @@ Events.on(mouseConstraint, "mouseup", (e) => {
   }
 })
 Events.on(engine, "collisionStart", (e) => {
+  
+  var objs = [e.pairs[0].bodyA, e.pairs[0].bodyB];
   if (dragged_object != null) {
-    var objs = [e.pairs[0].bodyA, e.pairs[0].bodyB];
     for (var obj of objs) {
       Body.setVelocity(obj, Vector.create(0, 0));
       Body.setAngularVelocity(obj, 0);
+    }
+  }
+  if (target_event_select.value == "1") { //衝突
+    if (objs[0].id%4==1 && objs[1].id == target1 || objs[1].id%4==1 && objs[0].id == target1) {
+      console.log("collision!");
+      past_time += Date.now() - start_time;
+      console.log(past_time);
     }
   }
 });
@@ -78,7 +86,7 @@ let init = () => {
   for (var i = objects.length - 1; i >= 0; i--) {
     console.log(target_obj1_select.options[i]);
     target_obj1_select.removeChild(target_obj1_select.options[i]);
-    target_obj2_select.removeChild(target_obj2_select.options[i]);
+    target_obj2_select.removeChild(target_obj2_select.options[4+i]);
     set_object_select.removeChild(set_object_select.options[i]);
   }
 
@@ -163,13 +171,23 @@ let restart = () => {
   runner = Engine.run(engine);
   running = true;
   g = use_gravity.checked ? GRAVITY : 0;
+
+  // 時間の初期化
+  start_time = null;
+  past_time = 0;
   start();
 };
 
 let running = false;
+let start_time = null;
+let past_time = 0;
+
 let start = () => {
+
   running = !running;
   if (running) {
+    start_time = Date.now();
+
     for (var i in objects) {
       var obj = objects[i];
       Body.setVelocity(obj, velocities[i]);
@@ -177,8 +195,16 @@ let start = () => {
       Body.setMass(obj, masses[i]);
     }
     engine.world.gravity.y = g;
-    World.remove(engine.world, mouseConstraint);
+    World.remove(engine.world, mouseConstraint);    
+
+    target1 = target_obj1_select.value;
+    target2 = target_obj2_select.value;
+    if (target2 == "floor") target2 = 1;
   } else {
+    if (start_time != null) {
+      let x = Date.now () - start_time;
+      past_time += x;
+    }
     for (var i in objects) {
       var obj = objects[i];
       velocities[i] = Vector.clone(obj.velocity);
@@ -235,9 +261,21 @@ setting_close_btn.onclick = show_setting;
 let setting_frame = document.getElementById("setting-frame");
 show_setting();
 
+
 // シミュレーション内容
 let target_obj1_select = document.getElementById("obj1-select");
+let target1 = target_obj1_select.value;
+target_obj1_select.onchange = () => {
+  target1 = target_obj1_select.value;
+  console.log("changed", target1);
+}
 let target_obj2_select = document.getElementById("obj2-select");
+let target2 = 1;
+target_obj2_select.onchange = () => {
+  target2 = target_obj2_select.value;
+  if (target2 == "floor") target2 = 1;
+  console.log("changed", target2);
+}
 let target_event_select = document.getElementById("event-select");
 let target_select = document.getElementById("target-select");
 
