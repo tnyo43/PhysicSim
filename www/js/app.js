@@ -34,6 +34,60 @@ var mouseConstraint = MouseConstraint.create(engine, {
   }
 });
 
+let FENCES = [
+  Bodies.rectangle(WIDTH/2, HEIGHT, WIDTH, 10,
+  {
+      isStatic: true,
+      render : {
+        fillStyle: '#000000',
+        strokeStyle: 'rgba(0, 0, 0, 0)',
+        lineWidth: 0
+      }
+  }), 
+  Bodies.rectangle(0, HEIGHT/2, 10, HEIGHT,
+  {
+      isStatic: true,
+      render : {
+        fillStyle: '#000000',
+        strokeStyle: 'rgba(0, 0, 0, 0)',
+        lineWidth: 0
+      }
+  }), 
+  Bodies.rectangle(WIDTH, HEIGHT/2, 10, HEIGHT,
+  {
+      isStatic: true,
+      render : {
+        fillStyle: '#000000',
+        strokeStyle: 'rgba(0, 0, 0, 0)',
+        lineWidth: 0
+      }
+  }),
+  Bodies.rectangle(WIDTH/2, 0, WIDTH, 10,
+  {
+      isStatic: true,
+      render : {
+        fillStyle: '#000000',
+        strokeStyle: 'rgba(0, 0, 0, 0)',
+        lineWidth: 0
+      }
+  }), 
+];
+let fence_used = [false, false, false, false]; 
+
+// チェックボックスの更新で枠の変更
+let update_fence = () => {
+  for (var i in FENCES) {
+    if (fence_checkers[i].checked ^ fence_used[i]) {
+      fence_used[i] = fence_checkers[i].checked;
+      if (fence_used[i]) {
+        World.add(engine.world, [FENCES[i]]);
+      } else {
+        World.remove(engine.world, [FENCES[i]]);
+      }
+    }
+  }
+}
+
 var dragged_object = null;
 Events.on(mouseConstraint, "mousedown", (e) => {
   if (e.source.body != null) {
@@ -59,7 +113,7 @@ Events.on(engine, "collisionStart", (e) => {
     }
   }
   if (target_event_select.value == "1") { //衝突
-    if (objs[0].id%4==1 && objs[1].id == target1 || objs[1].id%4==1 && objs[0].id == target1) {
+    if (objs[0].id == target1 && objs[1].id == target2 || objs[1].id == target1 && objs[0].id == target2) {
       console.log("collision!");
       past_time += Date.now() - start_time;
       console.log(past_time);
@@ -151,20 +205,11 @@ let restart = () => {
       }
     });
 
-  // isStatic:静的(完全固定)
-  var ground = Bodies.rectangle(WIDTH/2, HEIGHT, WIDTH, 10,
-  {
-      isStatic: true,
-      render : {
-        fillStyle: '#000000',
-        strokeStyle: 'rgba(0, 0, 0, 0)',
-        lineWidth: 0
-      }
-    });
 
-  // 二つの箱(四角)と地面を追加
 
-  World.add(engine.world, [ground]);
+  // World.add(engine.world, GROUNDS);
+  fence_used = [false, false, false, false];
+  update_fence();
   add_objects([boxA, boxB, boxC]);
 
   // Matter.js エンジン起動
@@ -199,7 +244,6 @@ let start = () => {
 
     target1 = target_obj1_select.value;
     target2 = target_obj2_select.value;
-    if (target2 == "floor") target2 = 1;
   } else {
     if (start_time != null) {
       let x = Date.now () - start_time;
@@ -273,11 +317,22 @@ let target_obj2_select = document.getElementById("obj2-select");
 let target2 = 1;
 target_obj2_select.onchange = () => {
   target2 = target_obj2_select.value;
-  if (target2 == "floor") target2 = 1;
   console.log("changed", target2);
 }
 let target_event_select = document.getElementById("event-select");
 let target_select = document.getElementById("target-select");
+
+// 枠の設定
+let fence_checkers = [
+  document.getElementById("floor-check"),
+  document.getElementById("left-check"),
+  document.getElementById("right-check"),
+  document.getElementById("ceil-check")
+];
+for (var f of fence_checkers) {
+  f.onchange = update_fence;
+  f.checked = true;
+}
 
 // パラメータ変更
 let param_mode_btn = document.getElementById("param-mode-btn");

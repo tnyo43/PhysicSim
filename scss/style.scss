@@ -47,14 +47,14 @@ button {
       top: 5px;
       z-index: 11;
     }
-    #target-div, #bodies-div {
+    #env-div, #bodies-div {
       height: 40%;
       background-color: gray;
-      margin: 10%;      
+      margin: 10%;
+      display: flex;   
     }
 
     #bodies-div {
-      display: flex;
 
       #object_div {
         flex-grow: 1;
