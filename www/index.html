@@ -41,9 +41,18 @@
       </div>
       <div id="bodies-div">
         <div id="object_div">
-          <form>
-            <select id="obj-select" name="target"></select>
-          </form>
+          <button id="param-mode-btn"></button>
+          <div id="new-obj-mode-div">
+            <select id="new-obj-shape" name="shape">
+              <option value="rect">長方形</option>
+              <option value="circ">円</option>
+            </select>
+          </div>
+          <div id="edit-obj-mode-div">
+            <form>
+              <select id="obj-select" name="target"></select>
+            </form>
+          </div>
         </div>
         <div id="params_div">
           <table border="0">
@@ -55,13 +64,17 @@
               <td align="right"><b>y</b></td>
               <td><input type="text" id="posY"name="y" size="30" maxlength="20"></td>
             </tr>
-            <tr>
+            <tr class="param-rect">
               <td align="right"><b>高さ</b></td>
               <td><input type="text" id="sizeH" name="h" size="30" maxlength="20"></td>
-            </tr>
+            </tr class="param-rect">
             <tr>
               <td align="right"><b>幅</b></td>
               <td><input type="text" id="sizeW" name="w" size="30" maxlength="20"></td>
+            </tr>
+            <tr class="param-circ">
+              <td align="right"><b>半径</b></td>
+              <td><input type="text" id="radius" name="r" size="30" maxlength="20"></td>
             </tr>
             <tr>
               <td align="right"><b>速度X</b></td>

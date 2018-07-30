@@ -64,6 +64,7 @@ let objects = [];
 let velocities = [];
 let angular_velocities = [];
 let masses = [];
+let index_offset = 0;
 
 let init = () => {
   World.clear(engine.world);
@@ -74,6 +75,13 @@ let init = () => {
   
   engine.render.options.wireframeBackground = "#004444";
   
+  for (var i = objects.length - 1; i >= 0; i--) {
+    console.log(target_obj1_select.options[i]);
+    target_obj1_select.removeChild(target_obj1_select.options[i]);
+    target_obj2_select.removeChild(target_obj2_select.options[i]);
+    set_object_select.removeChild(set_object_select.options[i]);
+  }
+
   objects = [];
   velocities = [];
   angular_velocities = [];
@@ -218,16 +226,48 @@ let reset_btn = document.getElementById("reset-btn");
 reset_btn.onclick = restart;
 let use_gravity = document.getElementById("gravity-check");
 use_gravity.checked = true;
+
+// 環境設定ボタンを押した時
 let setting_btn = document.getElementById("setting-btn");
 let setting_close_btn = document.getElementById("setting-close-btn");
 setting_btn.onclick = show_setting;
 setting_close_btn.onclick = show_setting;
 let setting_frame = document.getElementById("setting-frame");
 show_setting();
+
+// シミュレーション内容
 let target_obj1_select = document.getElementById("obj1-select");
 let target_obj2_select = document.getElementById("obj2-select");
 let target_event_select = document.getElementById("event-select");
 let target_select = document.getElementById("target-select");
+
+// パラメータ変更
+let param_mode_btn = document.getElementById("param-mode-btn");
+let mode_new = false;
+param_mode_btn.onclick = () => {
+  mode_new = !mode_new;
+  if (mode_new) {
+    param_mode_btn.innerText = "オブジェクトを編集";
+    param_btn.innerText = "変更";
+    param_btn.value = "edit";
+    new_obj_mode_div.style.display = "none";
+    edit_obj_mode_div.style.display = "block";
+    sizeH_input.disabled = true;
+    sizeH_input.value = "";
+    sizeW_input.disabled = true;
+    sizeW_input.value = "";
+  } else {
+    param_mode_btn.innerText = "オブジェクトを作成";
+    param_btn.innerText = "作成";
+    param_btn.value = "create";    
+    new_obj_mode_div.style.display = "block";
+    edit_obj_mode_div.style.display = "none";
+    sizeH_input.disabled = false;
+    sizeW_input.disabled = false;
+  }
+}
+let new_obj_mode_div = document.getElementById("new-obj-mode-div");
+let edit_obj_mode_div = document.getElementById("edit-obj-mode-div");
 let set_object_select = document.getElementById("obj-select");
 set_object_select.onchange = () => {
   var id_ = set_object_select.value;
@@ -239,23 +279,74 @@ set_object_select.onchange = () => {
   }
 }
 
+// パラメータインプット
+let new_obj_shape = document.getElementById("new-obj-shape");
+new_obj_shape.onchange = () => {
+  console.log("value");
+  if (new_obj_shape.value == "rect") {
+    sizeH_input.style.display = "block";
+    sizeW_input.style.display = "block";
+    radius_input.style.display = "none";
+  } else {
+    sizeH_input.style.display = "none";
+    sizeW_input.style.display = "none";
+    radius_input.style.display = "block";
+  }
+}
 let posX_input = document.getElementById("posX");
 let posY_input = document.getElementById("posY");
 let sizeH_input = document.getElementById("sizeH");
 let sizeW_input = document.getElementById("sizeW");
+let radius_input = document.getElementById("radius");
 let veloX_input = document.getElementById("veloX");
 let veloY_input = document.getElementById("veloY");
 let mass_input = document.getElementById("obj-mass");
 let param_btn = document.getElementById("param-btn");
 param_btn.onclick = () => {
-  var id_ = set_object_select.value;
-  for (var i in objects) {
-    if (objects[i].id == id_) {
-      update_object_params(i);
-      break;
+  if (param_btn.value == "edit") {
+    var id_ = set_object_select.value;
+    for (var i in objects) {
+      if (objects[i].id == id_) {
+        update_object_params(i);
+        break;
+      }
+    }
+  } else if (param_btn.value == "create") {
+    var x = (posX_input.value)|0, y = (posY_input.value)|0, m = mass_input.value;
+
+    if (new_obj_shape.value == "rect") {
+      add_object(Bodies.rectangle(
+        x, y,
+        sizeW_input.value,
+        sizeH_input.value,
+        {
+          mass: m,
+          inertia: Infinity,
+          render: {
+            lineWidth: 5,
+            fillStyle: '#ff0000',
+            strokeStyle: 'rgba(0, 0, 0, 0)',
+          }
+        }
+      ));
+    } else if (new_obj_shape.value == "circ") {
+      add_object(Bodies.circle(
+        x, y,
+        radius_input.value,
+        {
+          mass: m,
+          inertia: Infinity,
+          render: {
+            lineWidth: 5,
+            fillStyle: '#ff0000',
+            strokeStyle: 'rgba(0, 0, 0, 0)',
+          }
+        }
+      ));
     }
   }
 }
+param_mode_btn.click();
 
 /*
 posX_input
