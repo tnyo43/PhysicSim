@@ -1,7 +1,9 @@
-let main_load = () => {
-  const canvas = document.getElementById("matter-canvas");
+let engine = null;
 
-  let engine = init_engine(canvas, WIDTH, HEIGHT);
+main_load = (c) => {
+  const canvas = c;
+  
+  engine = init_engine(canvas, WIDTH, HEIGHT);
 
   var mouseConstraint = MouseConstraint.create(engine, {
     constraint: {

@@ -6,6 +6,13 @@
   <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
   <script src="components/loader.js"></script>
   
+  <link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine-3.1.0/jasmine_favicon.png">
+  <link rel="stylesheet" href="jasmine/lib/jasmine-3.1.0/jasmine.css">
+  <script src="jasmine/lib/jasmine-3.1.0/jasmine.js"></script>
+  <script src="jasmine/lib/jasmine-3.1.0/jasmine-html.js"></script>
+  <script src="jasmine/lib/jasmine-3.1.0/boot.js"></script>
+
+
   <script src="lib/angular/angular.min.js"></script>
   <script src="lib/onsenui/js/onsenui.min.js"></script>
   <script src="lib/onsenui/js/angular-onsenui.min.js"></script>
@@ -25,10 +32,13 @@
     });
 
     document.addEventListener("init", function(event) {
-      var page = event.target;  // initイベントが発生したページ
+      var page = event.target;
+
       if(page.id === "main-page") {
         console.log("open main-page");
-        main_load();
+        // main_load(document.getElementById("matter-canvas"));
+      } else if (page.id === "hoge-page") {
+        console.log("open hoge-page");
       }
     });
   </script>
@@ -36,6 +46,10 @@
   <script src="components/matter.min.js"></script>
   <script src="js/my-matter.js"></script>
   <script src="js/app.js"></script>
+
+  <script src="jasmine/spec/TestSpec.js"></script>
+
+
 </head>
 <body>
   <ons-page>
@@ -44,6 +58,8 @@
     </ons-toolbar>
     <ons-tabbar position="auto">
       <ons-tab label="Tab 1" page="main.html" active>
+      </ons-tab>
+      <ons-tab label="Tab test" page="test.html">
       </ons-tab>
     </ons-tabbar>
     

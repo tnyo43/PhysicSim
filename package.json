@@ -2,10 +2,15 @@
   "name": "monaca-template-minimum",
   "displayName": "Monaca Template Minimum",
   "dependencies": {
+    "chai": "^4.1.2",
     "cordova-custom-config": "5.0.2",
     "cordova-plugin-splashscreen": "5.0.1",
     "cordova-plugin-whitelist": "1.3.3",
+    "init": "^0.1.2",
+    "jasmin": "0.0.2",
+    "jquery": "^3.3.1",
     "matter-js": "^0.14.2",
+    "monaca-plugin-backend": "2.0.1",
     "monaca-plugin-monaca-core": "3.2.0"
   },
   "cordova": {
@@ -13,15 +18,29 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-splashscreen": {},
       "cordova-custom-config": {},
-      "monaca-plugin-monaca-core": {}
+      "monaca-plugin-monaca-core": {},
+      "monaca-plugin-backend": {}
     }
   },
   "devDependencies": {
+    "ava": "^0.25.0",
+    "jasmine": "^3.1.0",
+    "karma": "^2.0.5",
+    "mocha": "^5.2.0",
     "node-sass": "^4.9.2",
-    "nodemon": "^1.18.3"
+    "nodemon": "^1.18.3",
+    "avaron": "*"
   },
   "scripts": {
     "build": "node_modules/node-sass/bin/node-sass --include-path scss scss/style.scss www/css/style.css",
-    "watch": "node_modules/nodemon/bin/nodemon.js -e scss -x \"npm run build\""
+    "watch": "node_modules/nodemon/bin/nodemon.js -e scss -x \"npm run build\"",
+    "test": "avaron"
+  },
+  "avaron": {
+    "renderer": true,
+    "fixture": "./fixture.html",
+    "windowOptions": {
+      "title": "avaron"
+    }
   }
 }
