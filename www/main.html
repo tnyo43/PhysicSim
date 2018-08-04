@@ -1,0 +1,113 @@
+<ons-page id="main-page">
+  <main id="matter-canvas"></main>
+  <button id="setting-btn"/></button>
+  <div id="setting-frame">
+    <div id="white-frame">
+      <button id="setting-close-btn"></button>
+      <div id="env-div">
+        <div id="target-div">
+          <p>目標設定</p>
+          <form>
+            <select id="obj1-select" name="object1"></select>
+          </form>
+          <p>が</p>
+          <form>
+            <select id="obj2-select" name="object2">
+              <option value="2">床</option>
+              <option value="3">左の壁</option>
+              <option value="4">右の壁</option>
+              <option value="5">天井</option>
+            </select>
+          </form>
+          <p>に</p>
+          <form>
+            <select id="event-select" name="event">
+              <option value="1">衝突</option>
+            </select>
+          </form>
+          <p>までの</p>
+          <form>
+            <select id="target-select" name="target">
+              <option value="1">時間</option>
+            </select>
+          </form>
+        </div>
+        <div id="fence-div">
+          <table border="0">
+            <tr>
+              <td><p><input id="floor-check" type="checkbox">下<p></td>
+            </tr>
+            <tr>
+              <td><p><input id="left-check" type="checkbox">左<p></td>
+            </tr>
+            <tr>
+              <td><p><input id="right-check" type="checkbox">右<p></td>
+            </tr>
+            <tr>
+              <td><p><input id="ceil-check" type="checkbox">上<p></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div id="bodies-div">
+        <div id="object_div">
+          <button id="param-mode-btn"></button>
+          <div id="new-obj-mode-div">
+            <select id="new-obj-shape" name="shape">
+              <option value="rect">長方形</option>
+              <option value="circ">円</option>
+            </select>
+          </div>
+          <div id="edit-obj-mode-div">
+            <form>
+              <select id="obj-select" name="target"></select>
+            </form>
+          </div>
+        </div>
+        <div id="params_div">
+          <table border="0">
+            <tr>
+              <td align="right"><b>x</b></td>
+              <td><input type="text" id="posX"name="x" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>y</b></td>
+              <td><input type="text" id="posY"name="y" size="30" maxlength="20"></td>
+            </tr>
+            <tr class="param-rect">
+              <td align="right"><b>高さ</b></td>
+              <td><input type="text" id="sizeH" name="h" size="30" maxlength="20"></td>
+            </tr class="param-rect">
+            <tr>
+              <td align="right"><b>幅</b></td>
+              <td><input type="text" id="sizeW" name="w" size="30" maxlength="20"></td>
+            </tr>
+            <tr class="param-circ">
+              <td align="right"><b>半径</b></td>
+              <td><input type="text" id="radius" name="r" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>速度X</b></td>
+              <td><input type="text" id="veloX" name="velox" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>速度Y</b></td>
+              <td><input type="text" id="veloY" name="veloy" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>質量</b></td>
+              <td><input type="text" id="obj-mass" name="obj-mass" size="30" maxlength="20"></td>
+            </tr>
+          </table>
+          <button id="param-btn">変更</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="button-div">
+    <p><button id="start-btn">START</button></p>
+    <p><button id="reset-btn">RESET</button></p>
+    <p><input id="gravity-check" type="checkbox">gravity<p>
+  </div>
+  
+</ons-page>
