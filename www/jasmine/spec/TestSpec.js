@@ -1,6 +1,5 @@
 describe("物理エンジンの環境", function() {
     let value;
-
     beforeAll(function() {
       console.log("[beforeAll]");
       main_load(document.getElementById("matter-canvas"));
