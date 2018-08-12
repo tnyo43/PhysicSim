@@ -1,11 +1,174 @@
 let engine = null;
+let mouseConstraint;
+let objects, velocities, angular_velocities, masses;
+let target_obj1_select, target_obj2_select, set_object_select;
+let target_event_select, target_select;
+let target1, target2;
+let runner;
+
+let add_object = (obj) => {
+  objects.push(obj);
+  velocities.push(Vector.create(0, 0));
+  angular_velocities.push(0);
+  masses.push(1);
+  World.add(engine.world, [obj]);
+
+  console.log(obj)
+  var op = document.createElement("option");
+  op.text = obj.id;
+  target_obj1_select.add(op);
+  op = document.createElement("option");
+  op.text = obj.id;
+  target_obj2_select.add(op);
+  op = document.createElement("option");
+  op.text = obj.id;
+  set_object_select.add(op);
+}
+let add_objects = (objs) => {
+  for (var obj of objs) add_object(obj);
+}
+
+
+let posX_input, posY_input, sizeH_input, sizeW_input, radius_input, veloX_input, veloY_input, mass_input, param_btntn;
+let new_obj_mode_div, edit_obj_mode_div;
+
+let use_gravity;
+let init = () => {
+  World.clear(engine.world);
+  if (runner != null) {
+    Runner.stop(runner);
+  }
+  Engine.clear(engine);
+  engine.render.options.wireframeBackground = "#004444";
+  runner = Engine.run(engine);
+  
+  for (var i = objects.length - 1; i >= 0; i--) {
+    console.log(target_obj1_select.options[i]);
+    target_obj1_select.removeChild(target_obj1_select.options[i]);
+    target_obj2_select.removeChild(target_obj2_select.options[4+i]);
+    set_object_select.removeChild(set_object_select.options[i]);
+  }
+
+  objects = [];
+  velocities = [];
+  angular_velocities = [];
+  masses = [];
+}
+
+
+let restart = () => {
+  init ();
+  console.log ("restart");
+
+  var boxA = Bodies.rectangle(100, 200, 80, 80, 
+    {
+      inertia: Infinity,
+      render: {
+        lineWidth: 5,
+        fillStyle: '#ff0000',
+        strokeStyle: 'rgba(0, 0, 0, 0)',
+      }
+    });
+  var boxB = Bodies.rectangle(45, 50, 80, 80, 
+    {
+      inertia: Infinity,
+      render: {
+        lineWidth: 5,
+        fillStyle: '#00ff00',
+        strokeStyle: 'rgba(0, 0, 0, 0)',
+
+      }
+    });
+  var boxC = Bodies.rectangle(170, 40, 80, 80, 
+    {
+      inertia: Infinity,
+      render: {
+        lineWidth: 5,
+        fillStyle: '#0000ff',
+        strokeStyle: 'rgba(0, 0, 0, 0)',
+      }
+    });
+  
+  fence_used = [false, false, false, false];
+  update_fence();
+  //add_objects([boxA, boxB, boxC]);
+
+  // Matter.js エンジン起動
+  runner = Engine.run(engine);
+  running = true;
+  g = use_gravity.checked ? GRAVITY : 0;
+
+  // 時間の初期化
+  start_time = null;
+  past_time = 0;
+  start();
+};
+
+let fence_checkers, fence_used;
+let FENCE;
+
+// チェックボックスの更新で枠の変更
+let update_fence = () => {
+  for (var i in FENCES) {
+    if (fence_checkers[i].checked ^ fence_used[i]) {
+      fence_used[i] = fence_checkers[i].checked;
+      if (fence_used[i]) {
+        World.add(engine.world, [FENCES[i]]);
+      } else {
+        World.remove(engine.world, [FENCES[i]]);
+      }
+    }
+  }
+}
+
+
+let running = false;
+let start_time = null;
+let past_time = 0;
+
+let start = () => {
+
+  running = !running;
+  if (running) {
+    start_time = Date.now();
+
+    for (var i in objects) {
+      var obj = objects[i];
+      Body.setVelocity(obj, velocities[i]);
+      Body.setAngularVelocity(obj, angular_velocities[i]);
+      Body.setMass(obj, masses[i]);
+    }
+    engine.world.gravity.y = g;
+    World.remove(engine.world, mouseConstraint);    
+
+    target1 = target_obj1_select.value;
+    target2 = target_obj2_select.value;
+  } else {
+    if (start_time != null) {
+      let x = Date.now () - start_time;
+      past_time += x;
+    }
+    for (var i in objects) {
+      var obj = objects[i];
+      velocities[i] = Vector.clone(obj.velocity);
+      angular_velocities[i] = obj.angularVelocity;
+      Body.setVelocity(obj, Vector.create(0, 0));
+      Body.setAngularVelocity(obj, 0);
+      Body.setMass(obj, INF);
+    };
+    engine.world.gravity.y = 0;
+    World.add(engine.world, mouseConstraint);
+  }
+}
+
 
 main_load = (c) => {
   const canvas = c;
+  console.log(init);
   
   engine = init_engine(canvas, WIDTH, HEIGHT);
 
-  var mouseConstraint = MouseConstraint.create(engine, {
+  mouseConstraint = MouseConstraint.create(engine, {
     constraint: {
         stiffness: 1,
         render: {
@@ -15,27 +178,14 @@ main_load = (c) => {
     }
   });
 
-  let FENCES = [
+  FENCES = [
     static_black(0, HEIGHT-5, WIDTH, 5), // 下
     static_black(0, 0, 5, HEIGHT), // 左
     static_black(WIDTH-5, 0, 5, HEIGHT), // 右
     static_black(0, 0, WIDTH, 5), // 下
   ];
-  let fence_used = [false, false, false, false]; 
+  fence_used = [false, false, false, false]; 
 
-  // チェックボックスの更新で枠の変更
-  let update_fence = () => {
-    for (var i in FENCES) {
-      if (fence_checkers[i].checked ^ fence_used[i]) {
-        fence_used[i] = fence_checkers[i].checked;
-        if (fence_used[i]) {
-          World.add(engine.world, [FENCES[i]]);
-        } else {
-          World.remove(engine.world, [FENCES[i]]);
-        }
-      }
-    }
-  }
 
   var dragged_object = null;
   Events.on(mouseConstraint, "mousedown", (e) => {
@@ -69,146 +219,14 @@ main_load = (c) => {
       }
     }
   });
-  let runner = null;
+  runner = null;
 
-  let objects = [];
-  let velocities = [];
-  let angular_velocities = [];
-  let masses = [];
+  objects = [];
+  velocities = [];
+  angular_velocities = [];
+  masses = [];
   let index_offset = 0;
 
-  let init = () => {
-    World.clear(engine.world);
-    if (runner != null) {
-      Runner.stop(runner);
-    }
-    Engine.clear(engine);
-    
-    engine.render.options.wireframeBackground = "#004444";
-    
-    for (var i = objects.length - 1; i >= 0; i--) {
-      console.log(target_obj1_select.options[i]);
-      target_obj1_select.removeChild(target_obj1_select.options[i]);
-      target_obj2_select.removeChild(target_obj2_select.options[4+i]);
-      set_object_select.removeChild(set_object_select.options[i]);
-    }
-
-    objects = [];
-    velocities = [];
-    angular_velocities = [];
-    masses = [];
-  }
-
-  let add_object = (obj) => {
-    objects.push(obj);
-    velocities.push(Vector.create(0, 0));
-    angular_velocities.push(0);
-    masses.push(1);
-    World.add(engine.world, [obj]);
-
-    console.log(obj)
-    var op = document.createElement("option");
-    op.text = obj.id;
-    target_obj1_select.add(op);
-    op = document.createElement("option");
-    op.text = obj.id;
-    target_obj2_select.add(op);
-    op = document.createElement("option");
-    op.text = obj.id;
-    set_object_select.add(op);
-  }
-  let add_objects = (objs) => {
-    for (var obj of objs) add_object(obj);
-  }
-
-  let restart = () => {
-    init ();
-
-    var boxA = Bodies.rectangle(100, 200, 80, 80, 
-      {
-        inertia: Infinity,
-        render: {
-          lineWidth: 5,
-          fillStyle: '#ff0000',
-          strokeStyle: 'rgba(0, 0, 0, 0)',
-        }
-      });
-    var boxB = Bodies.rectangle(45, 50, 80, 80, 
-      {
-        inertia: Infinity,
-        render: {
-          lineWidth: 5,
-          fillStyle: '#00ff00',
-          strokeStyle: 'rgba(0, 0, 0, 0)',
-
-        }
-      });
-      var boxC = Bodies.rectangle(170, 40, 80, 80, 
-      {
-        inertia: Infinity,
-        render: {
-          lineWidth: 5,
-          fillStyle: '#0000ff',
-          strokeStyle: 'rgba(0, 0, 0, 0)',
-        }
-      });
-
-
-
-    // World.add(engine.world, GROUNDS);
-    fence_used = [false, false, false, false];
-    update_fence();
-    add_objects([boxA, boxB, boxC]);
-
-    // Matter.js エンジン起動
-    runner = Engine.run(engine);
-    running = true;
-    g = use_gravity.checked ? GRAVITY : 0;
-
-    // 時間の初期化
-    start_time = null;
-    past_time = 0;
-    start();
-  };
-
-  let running = false;
-  let start_time = null;
-  let past_time = 0;
-
-  let start = () => {
-
-    running = !running;
-    if (running) {
-      start_time = Date.now();
-
-      for (var i in objects) {
-        var obj = objects[i];
-        Body.setVelocity(obj, velocities[i]);
-        Body.setAngularVelocity(obj, angular_velocities[i]);
-        Body.setMass(obj, masses[i]);
-      }
-      engine.world.gravity.y = g;
-      World.remove(engine.world, mouseConstraint);    
-
-      target1 = target_obj1_select.value;
-      target2 = target_obj2_select.value;
-    } else {
-      if (start_time != null) {
-        let x = Date.now () - start_time;
-        past_time += x;
-      }
-      for (var i in objects) {
-        var obj = objects[i];
-        velocities[i] = Vector.clone(obj.velocity);
-        angular_velocities[i] = obj.angularVelocity;
-        Body.setVelocity(obj, Vector.create(0, 0));
-        Body.setAngularVelocity(obj, 0);
-        Body.setMass(obj, INF);
-      };
-      engine.world.gravity.y = 0;
-      World.add(engine.world, mouseConstraint);
-    }
-  }
 
   let is_setting_open = true;
   let show_setting = () => {
@@ -242,7 +260,7 @@ main_load = (c) => {
   start_btn.onclick = start;
   let reset_btn = document.getElementById("reset-btn");
   reset_btn.onclick = restart;
-  let use_gravity = document.getElementById("gravity-check");
+  use_gravity = document.getElementById("gravity-check");
   use_gravity.checked = true;
 
   // 環境設定ボタンを押した時
@@ -255,23 +273,23 @@ main_load = (c) => {
 
 
   // シミュレーション内容
-  let target_obj1_select = document.getElementById("obj1-select");
-  let target1 = target_obj1_select.value;
+  target_obj1_select = document.getElementById("obj1-select");
+  target1 = target_obj1_select.value;
   target_obj1_select.onchange = () => {
     target1 = target_obj1_select.value;
     console.log("changed", target1);
   }
-  let target_obj2_select = document.getElementById("obj2-select");
-  let target2 = 1;
+  target_obj2_select = document.getElementById("obj2-select");
+  target2 = 1;
   target_obj2_select.onchange = () => {
     target2 = target_obj2_select.value;
     console.log("changed", target2);
   }
-  let target_event_select = document.getElementById("event-select");
-  let target_select = document.getElementById("target-select");
+  target_event_select = document.getElementById("event-select");
+  target_select = document.getElementById("target-select");
 
   // 枠の設定
-  let fence_checkers = [
+  fence_checkers = [
     document.getElementById("floor-check"),
     document.getElementById("left-check"),
     document.getElementById("right-check"),
@@ -307,9 +325,9 @@ main_load = (c) => {
       sizeW_input.disabled = false;
     }
   }
-  let new_obj_mode_div = document.getElementById("new-obj-mode-div");
-  let edit_obj_mode_div = document.getElementById("edit-obj-mode-div");
-  let set_object_select = document.getElementById("obj-select");
+  new_obj_mode_div = document.getElementById("new-obj-mode-div");
+  edit_obj_mode_div = document.getElementById("edit-obj-mode-div");
+  set_object_select = document.getElementById("obj-select");
   set_object_select.onchange = () => {
     var id_ = set_object_select.value;
     for (var i in objects) {
@@ -334,15 +352,15 @@ main_load = (c) => {
       radius_input.style.display = "block";
     }
   }
-  let posX_input = document.getElementById("posX");
-  let posY_input = document.getElementById("posY");
-  let sizeH_input = document.getElementById("sizeH");
-  let sizeW_input = document.getElementById("sizeW");
-  let radius_input = document.getElementById("radius");
-  let veloX_input = document.getElementById("veloX");
-  let veloY_input = document.getElementById("veloY");
-  let mass_input = document.getElementById("obj-mass");
-  let param_btn = document.getElementById("param-btn");
+  posX_input = document.getElementById("posX");
+  posY_input = document.getElementById("posY");
+  sizeH_input = document.getElementById("sizeH");
+  sizeW_input = document.getElementById("sizeW");
+  radius_input = document.getElementById("radius");
+  veloX_input = document.getElementById("veloX");
+  veloY_input = document.getElementById("veloY");
+  mass_input = document.getElementById("obj-mass");
+  param_btn = document.getElementById("param-btn");
   param_btn.onclick = () => {
     if (param_btn.value == "edit") {
       var id_ = set_object_select.value;
