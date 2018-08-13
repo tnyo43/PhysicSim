@@ -57,3 +57,28 @@ let rect = (x, y, width, height, color) => {
 let is_gravity_active = () => {
   return engine.world.gravity.y;
 }
+
+let objects = [];
+let velocities = [];
+let default_velocities = [];
+let default_positions = [];
+
+let add_object = (obj) => {
+  World.add(engine.world, [obj]);
+
+  objects.push(obj);
+  velocities.push(Vector.create(0,0));
+  default_velocities.push(Vector.create(0,0));
+  default_positions.push(obj.position);
+}
+
+let set_velocity = (obj, velocity) => {
+  for (var i in objects) {
+    if (obj === objects[i]) {
+      velocities[i] = velocity;
+      default_velocities[i] = velocity;
+      return;
+    }
+  }
+  throw Exception;
+}

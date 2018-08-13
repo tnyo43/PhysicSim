@@ -87,4 +87,45 @@ describe("物理エンジンの環境", function() {
         expect(engine.world.gravity.y).toBe(0);
       });
     });
+
+    describe("速度", function() {
+
+      let obj;
+      beforeEach(function() {
+        use_gravity.checked = true;
+        update_gravity();
+        obj = rect(10, 10, 10, 10, '#ff0000');
+        add_object(obj);
+      });
+
+      afterEach(function() {
+        use_gravity.checked = true;
+        update_gravity();
+      });
+
+      it("スタートを押すと速度が変化する", function() {
+        set_velocity(obj, Vector.create(10, 0));
+        console.log(obj.velocity);
+        expect(obj.velocity.x).toBe(0);
+        start();
+        console.log(obj.velocity);
+        expect(obj.velocity.x).not.toBe(0);
+        stop();
+        console.log(obj.velocity);
+        expect(obj.velocity.x).toBe(0);
+      });
+
+      it("ストップを押すと停止、スタートで元の速度に戻る", function() {
+        set_velocity(obj, Vector.create(10, 0));
+        console.log(obj.velocity);
+        expect(obj.velocity.x).toBe(0);
+        start();
+        console.log(obj.velocity);
+        expect(obj.velocity.x).not.toBe(0);
+        stop();
+        console.log(obj.velocity);
+        expect(obj.velocity.x).toBe(0);
+      });
+    });
+
   });

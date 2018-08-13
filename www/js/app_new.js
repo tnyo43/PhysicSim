@@ -17,14 +17,15 @@ let init = (canvas) => {
 
 /// スタートボタンを押す前の状態に戻す
 let reset = () => {
+  objects = [];
+  velocities = [];
+  default_velocities = [];
+  default_positions = [];
+
   stop();
   /// 物理演算は停止させて置く
   engine.world.gravity.y = 0;
   clear();
-}
-
-let add_object = (obj) => {
-  World.add(engine.world, [obj]);
 }
 
 let update_fence = () => {
@@ -52,11 +53,20 @@ let is_running;
 let start = () => {
   engine.world.gravity.y = g;
   is_running = true;
+
+  for (var i in objects) {
+    Body.setVelocity(objects[i], velocities[i]);
+  }
 }
 
 let stop = () => {
   engine.world.gravity.y = 0;
   is_running = false;
+
+  for (var i in objects) {
+    velocities[i] = objects[i].velocity;
+    Body.setVelocity(objects[i], Vector.create(0,0));
+  }
 }
 
 /// 全てを実行する前に1回だけ
