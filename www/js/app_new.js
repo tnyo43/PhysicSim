@@ -17,15 +17,21 @@ let init = (canvas) => {
 
 /// スタートボタンを押す前の状態に戻す
 let reset = () => {
-  objects = [];
-  velocities = [];
-  default_velocities = [];
-  default_positions = [];
-
   stop();
   /// 物理演算は停止させて置く
   engine.world.gravity.y = 0;
-  clear();
+
+  World.clear(engine.world);
+  update_fence();
+
+  console.log("reset");
+  console.log(default_positions);
+  for (var i in objects) {
+    World.add(engine.world, [objects[i]]);
+    Body.setPosition(objects[i], Vector.clone(default_positions[i]));
+    Body.setVelocity(objects[i], Vector.create(0,0));
+  }
+  is_first_run = true;
 }
 
 let update_fence = () => {
@@ -41,30 +47,41 @@ let update_fence = () => {
 let clear = () => {
   World.clear(engine.world);
   update_fence();
+
+  objects = [];
+  velocities = [];
+  default_velocities = [];
+  default_positions = [];
 }
 
 /// HTMLエレメント
 let use_gravity;
 let start_btn;
+let reset_btn;
 
 
 let is_running;
+let is_first_run = true;
 
 let start = () => {
   engine.world.gravity.y = g;
   is_running = true;
 
   for (var i in objects) {
+    if (is_first_run){
+      velocities[i] = Vector.clone(default_velocities[i]);
+    } 
     Body.setVelocity(objects[i], velocities[i]);
   }
+  is_first_run = false;
 }
 
-let stop = () => {
+let stop = (message) => {
   engine.world.gravity.y = 0;
   is_running = false;
 
   for (var i in objects) {
-    velocities[i] = objects[i].velocity;
+    velocities[i] = Vector.clone(objects[i].velocity);
     Body.setVelocity(objects[i], Vector.create(0,0));
   }
 }
@@ -83,6 +100,9 @@ let start_app = (canvas) => {
     if (!is_running) start();
     else stop();
   }
+
+  reset_btn = document.getElementById("reset-btn");
+  reset_btn.onclick = reset;
 }
 
 let update_gravity = () => {

@@ -77,13 +77,10 @@ describe("物理エンジンの環境", function() {
       });
 
       it("スタートを押すと物理演算スタート", function() {
-        console.log(engine.world.gravity.y);
         expect(engine.world.gravity.y).toBe(0);
         start();
-        console.log(engine.world.gravity.y);
         expect(engine.world.gravity.y).not.toBe(0);
         stop();
-        console.log(engine.world.gravity.y);
         expect(engine.world.gravity.y).toBe(0);
       });
     });
@@ -105,26 +102,46 @@ describe("物理エンジンの環境", function() {
 
       it("スタートを押すと速度が変化する", function() {
         set_velocity(obj, Vector.create(10, 0));
-        console.log(obj.velocity);
         expect(obj.velocity.x).toBe(0);
         start();
-        console.log(obj.velocity);
         expect(obj.velocity.x).not.toBe(0);
         stop();
-        console.log(obj.velocity);
         expect(obj.velocity.x).toBe(0);
       });
-
-      it("ストップを押すと停止、スタートで元の速度に戻る", function() {
+      
+      it("リスタートを押すと保存された速度になる", function() {
         set_velocity(obj, Vector.create(10, 0));
-        console.log(obj.velocity);
+        Body.setVelocity(obj, Vector.create(0, 20));      start();
+        stop("restart");
         expect(obj.velocity.x).toBe(0);
         start();
-        console.log(obj.velocity);
-        expect(obj.velocity.x).not.toBe(0);
-        stop();
-        console.log(obj.velocity);
-        expect(obj.velocity.x).toBe(0);
+        expect(obj.velocity.x).toBe(10);
+      });
+    });
+
+    describe("位置", function() {
+
+      let obj;
+      beforeEach(function() {
+        use_gravity.checked = true;
+        update_gravity();
+        obj = rect(10, 10, 10, 10, '#ff0000');
+        add_object(obj);
+      });
+
+      afterEach(function() {
+        use_gravity.checked = true;
+        update_gravity();
+      });
+
+      it("リセットを押すと元の位置に戻る", function() {
+        set_position(obj, Vector.create(30, 40));
+        Body.setPosition(obj, Vector.create(50, 60));   
+        expect(obj.position.x).toBe(50);  
+        expect(obj.position.y).toBe(60);
+        reset();
+        expect(obj.position.x).toBe(30);
+        expect(obj.position.y).toBe(40);
       });
     });
 

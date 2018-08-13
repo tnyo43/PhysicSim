@@ -69,14 +69,25 @@ let add_object = (obj) => {
   objects.push(obj);
   velocities.push(Vector.create(0,0));
   default_velocities.push(Vector.create(0,0));
-  default_positions.push(obj.position);
+  default_positions.push(Vector.clone(obj.position));
 }
 
 let set_velocity = (obj, velocity) => {
   for (var i in objects) {
     if (obj === objects[i]) {
-      velocities[i] = velocity;
+      velocities[i] = Vector.create(0,0);
       default_velocities[i] = velocity;
+      return;
+    }
+  }
+  throw Exception;
+}
+
+let set_position = (obj, position) => {
+  for (var i in objects) {
+    if (obj === objects[i]) {
+      Body.setPosition(obj, position);
+      default_positions[i] = position;
       return;
     }
   }
