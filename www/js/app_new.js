@@ -24,8 +24,6 @@ let reset = () => {
   World.clear(engine.world);
   update_fence();
 
-  console.log("reset");
-  console.log(default_positions);
   for (var i in objects) {
     World.add(engine.world, [objects[i]]);
     Body.setPosition(objects[i], Vector.clone(default_positions[i]));
@@ -58,6 +56,8 @@ let clear = () => {
 let use_gravity;
 let start_btn;
 let reset_btn;
+
+let side_menu_btn;
 
 
 let is_running;
@@ -103,6 +103,12 @@ let start_app = (canvas) => {
 
   reset_btn = document.getElementById("reset-btn");
   reset_btn.onclick = reset;
+  
+  side_menu_btn = document.getElementById("side-menu-btn");
+  side_menu_btn.onclick = () => {
+    var menu = document.getElementById('menu');
+    menu.open();
+  }
 }
 
 let update_gravity = () => {
@@ -115,3 +121,4 @@ let update_gravity = () => {
     g = 0;
   }
 }
+

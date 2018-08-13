@@ -1,3 +1,4 @@
+function test_start()  {
 describe("物理エンジンの環境", function() {
     let value;
     beforeAll(function() {
@@ -144,5 +145,5 @@ describe("物理エンジンの環境", function() {
         expect(obj.position.y).toBe(40);
       });
     });
-
   });
+}
