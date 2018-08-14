@@ -53,3 +53,8 @@ button {
     #setting-frame #white-frame #bodies-div #params_div {
       flex-grow: 1;
       flex-basis: 70%; }
+
+#fab-div {
+  position: absolute;
+  right: 5px;
+  bottom: 5px; }

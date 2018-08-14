@@ -1,5 +1,5 @@
-const HEIGHT = 510; //screen.height;
-const WIDTH = 510; //screen.width;
+const HEIGHT = screen.height;
+const WIDTH = screen.width;
 
 const GRAVITY = 1;
 const INF = 10000000;

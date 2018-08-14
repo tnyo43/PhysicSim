@@ -3,7 +3,7 @@ describe("物理エンジンの環境", function() {
     let value;
     beforeAll(function() {
       console.log("[beforeAll]");
-      start_app(document.getElementById("matter-canvas"));
+      //start_app(document.getElementById("matter-canvas"));
     });
 
     beforeEach(function() {

@@ -55,7 +55,9 @@ let clear = () => {
 /// HTMLエレメント
 let use_gravity;
 let start_btn;
+let start_fab
 let reset_btn;
+let reset_fab;
 
 let side_menu_btn;
 
@@ -101,8 +103,17 @@ let start_app = (canvas) => {
     else stop();
   }
 
+  start_fab = document.getElementById("start-fab");
+  start_fab.onclick = () => {
+    if (!is_running) start();
+    else stop();
+  }
+
   reset_btn = document.getElementById("reset-btn");
   reset_btn.onclick = reset;
+
+  reset_fab = document.getElementById("reset-fab");
+  reset_fab.onclick = reset;
   
   side_menu_btn = document.getElementById("side-menu-btn");
   side_menu_btn.onclick = () => {
@@ -122,3 +133,13 @@ let update_gravity = () => {
   }
 }
 
+let app_default_setting = () => {
+  for (var i = 0; i < 4; i++) fence_used[i] = true;
+  reset ();
+  let obj;
+
+  use_gravity.checked = true;
+  update_gravity();
+  obj = rect(10, 10, 10, 10, '#ff0000');
+  add_object(obj);
+}
