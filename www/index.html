@@ -38,11 +38,16 @@
         console.log("open main-page");
         start_app(document.getElementById("matter-canvas"));
         app_default_setting();
-        test_start();
+        //test_start();
       } else if (page.id === "test-page") {
         console.log("open test-page");
       }
+
+      /// to show the result of the test
+      //document.querySelector('#myNavigator').pushPage('test.html');
     });
+
+  
   </script>
   
   <script src="components/matter.min.js"></script>
@@ -54,36 +59,6 @@
 
 </head>
 <body>
-  <ons-splitter>
-
-    <ons-splitter-side id="menu" side="left" width="220px"  collapse swipeable>
-      <ons-page>
-      <ons-list>
-        <ons-list-item tappable>
-          オブジェクト追加
-        </ons-list-item>
-      </ons-list>
-    </ons-page>
-    </ons-splitter-side>
-
-    <ons-splitter-content>
-      <ons-page>
-        <ons-toolbar>
-          <div class="center" id="toolbar-title"></div>
-          <div class="left">
-            <ons-toolbar-button id="side-menu-btn">
-              <ons-icon icon="md-menu"></ons-icon>
-            </ons-toolbar-button>
-          </div>
-        </ons-toolbar>
-        <ons-tabbar position="auto">
-          <ons-tab label="Tab 1" page="main.html" active>
-          </ons-tab>
-          <ons-tab label="Tab test" page="test.html">
-          </ons-tab>
-        </ons-tabbar>
-      </ons-page>
-    </ons-splitter-content>
-  </ons-splitter>
+  <ons-navigator id="myNavigator" page="main.html" var="app.navi">
 </body>
 </html>

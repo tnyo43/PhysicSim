@@ -1,5 +1,5 @@
-const HEIGHT = screen.height;
-const WIDTH = screen.width;
+const HEIGHT = screen.height-130;
+const WIDTH = screen.width-30;
 
 const GRAVITY = 1;
 const INF = 10000000;
@@ -11,6 +11,7 @@ var Body = Matter.Body;
 var Bodies = Matter.Bodies;
 var Runner = Matter.Runner;
 var Vector = Matter.Vector;
+var Mouse = Matter.Mouse;
 var MouseConstraint = Matter.MouseConstraint;
 var Events = Matter.Events;
 
@@ -46,10 +47,11 @@ let rect = (x, y, width, height, color) => {
   return Bodies.rectangle(x+width/2, y+height/2, width, height,
   {
     isStatic: false,
+    inertia: Infinity,
     render : {
       fillStyle: color,
       strokeStyle: '#000000',
-      lineWidth: 0
+      lineWidth: 0,  
     }
   });
 }
