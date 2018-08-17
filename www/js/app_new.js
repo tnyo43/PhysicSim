@@ -14,10 +14,8 @@ let init = (canvas) => {
   engine = init_engine(canvas, WIDTH, HEIGHT);
   update_fence();
   
-  var mouse = Mouse.create(canvas.elt);
   mouseConstraint = MouseConstraint.create
   (engine, {
-    //mouse: mouse,
     constraint: {
       stiffness: 1,
       render: {
