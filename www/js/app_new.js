@@ -8,6 +8,8 @@ let FENCES = [
     static_black(0, 0, WIDTH, 5), // 下
 ];
 
+const OBJECT_MAX = 20;
+
 /// 物理エンジンを初期化
 /// オブジェクトも消去
 let init = (canvas) => {
@@ -27,7 +29,7 @@ let init = (canvas) => {
 
   Events.on(mouseConstraint, "mousedown", (e) => {
     console.log("mouse down");
-    reset();
+    //reset();
   });
   Events.on(mouseConstraint, "startdrag", (e) => {
     console.log(e.body);
@@ -38,7 +40,7 @@ let init = (canvas) => {
     if (e.body) {
       Body.setVelocity(e.body, Vector.create(0, 0));
     }
-    start();
+    //start();
     console.log("end drag");
   });
 
@@ -61,7 +63,6 @@ let start_at = null;
 
 /// スタートボタンを押す前の状態に戻す
 let reset = () => {
-  console.log("reset");
   stop();
 
   World.clear(engine.world);
@@ -108,6 +109,7 @@ let start_btn;
 let start_fab
 let reset_btn;
 let reset_fab;
+let add_fab;
 
 
 
@@ -115,7 +117,6 @@ let is_running;
 let is_first_run = true;
 
 let start = () => {
-  console.log("start");
   try{
     World.remove(engine.world, mouseConstraint);
   } catch (Exception) {
@@ -136,8 +137,6 @@ let start = () => {
 }
 
 let stop = () => {
-  console.log("stop");
-
   engine.world.gravity.y = 0;
   is_running = false;
 
@@ -147,7 +146,6 @@ let stop = () => {
   }
 
   simulate_time += new Date().getTime() - start_at;
-  console.log(simulate_time);
 }
 
 /// 全てを実行する前に1回だけ
@@ -181,14 +179,26 @@ let start_app = (canvas) => {
   reset_fab = document.getElementById("reset-fab");
   reset_fab.onclick = reset;
 
-  console.log(start_fab);
-  console.log(start_fab.onclick);
-  console.log(reset_fab);
-  console.log(reset_fab.onclick);
-
   document.getElementById("setting-btn").onclick = () => {
     start();
   }
+
+  add_fab = document.getElementById("add-fab");
+  add_fab.onclick = () => {
+    add_element_to_world(rect(10, 20, 30, 40));
+  }
+}
+
+let add_element_to_world = (obj) => {
+    if (is_first_run) {
+      if (objects.length < OBJECT_MAX) add_object(obj);
+      else{
+        /// 警告文を見せる
+      }
+    }
+    else {
+      /// 警告文を見せる
+    }
 }
 
 let update_gravity = () => {

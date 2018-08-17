@@ -2,23 +2,51 @@ function test_make_element () {
   let value;
   beforeAll(function() {
     console.log("[beforeAll]");
-    //start_app(document.getElementById("matter-canvas"));
   });
 
   beforeEach(function() {
     console.log("[beforeEach]");
+    clear();
     
     for (var i = 0; i < 4; i++) fence_used[i] = true;
     reset ();
   });
 
-  afterEach(function() {
-    clear();
-  });
-
   describe("オブジェクトを追加", function() {
+    beforeEach(function() {
+      console.log("[beforeEach]");
+      clear();
+      
+      for (var i = 0; i < 4; i++) fence_used[i] = true;
+      reset ();
+    });
+
+    it("スタートを押すとオブジェクトが追加できない", function() {
+      add_element_to_world(rect(10, 20, 30, 40));
+      expect(objects.length).toBe(1);
+
+      start();
+      add_element_to_world(rect(10, 20, 30, 40));
+      expect(objects.length).toBe(1);
+
+      stop();
+      add_element_to_world(rect(10, 20, 30, 40));
+      expect(objects.length).toBe(1);
+
+      reset();
+      add_element_to_world(rect(10, 20, 30, 40));
+      expect(objects.length).toBe(2);
+      
+    });
+
+
     it("追加ボタンを押すとオブジェクトが1つ増える", function() {
-      //console.log(engine.world.bodies);
+      for (var i = 0; i < OBJECT_MAX; i++) {
+        add_element_to_world(rect(10, 20, 30, 40));
+        expect(objects.length).toBe(i+1);
+      }
+      add_element_to_world(rect(10, 20, 30, 40));
+      expect(objects.length).toBe(OBJECT_MAX);
     });
   });
 }
