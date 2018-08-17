@@ -44,7 +44,20 @@ let init = (canvas) => {
 
   World.add(engine.world, mouseConstraint);
   Engine.run(engine);
+
+  simulate_time = 0;
+
+  let show_timer = () => {
+    let t = simulate_time;
+    if (is_running) t += new Date().getTime() - start_at;
+    document.getElementById("timer").innerHTML = (t/1000).toFixed(3);
+    window.requestAnimationFrame(show_timer);
+  }
+  window.requestAnimationFrame(show_timer);
 }
+
+let simulate_time = 0;
+let start_at = null;
 
 /// スタートボタンを押す前の状態に戻す
 let reset = () => {
@@ -61,6 +74,8 @@ let reset = () => {
     Body.setVelocity(objects[i], Vector.create(0,0));
   }
   is_first_run = true;
+  simulate_time = 0;
+  start_at = null;
 }
 
 let update_fence = () => {
@@ -82,6 +97,9 @@ let clear = () => {
   velocities = [];
   default_velocities = [];
   default_positions = [];
+  
+  simulate_time = 0;
+  start_at = null;
 }
 
 /// HTMLエレメント
@@ -113,6 +131,8 @@ let start = () => {
     Body.setVelocity(objects[i], velocities[i]);
   }
   is_first_run = false;
+
+  start_at = new Date().getTime();
 }
 
 let stop = () => {
@@ -125,6 +145,9 @@ let stop = () => {
     velocities[i] = Vector.clone(objects[i].velocity);
     Body.setVelocity(objects[i], Vector.create(0,0));
   }
+
+  simulate_time += new Date().getTime() - start_at;
+  console.log(simulate_time);
 }
 
 /// 全てを実行する前に1回だけ

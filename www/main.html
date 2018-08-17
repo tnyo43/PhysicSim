@@ -111,14 +111,19 @@
   </div>
   
   <div id="fab-div">
-    <ons-fab id="add-fab">
-      <ons-icon icon="md-plus"></ons-icon>
-    </ons-fab>
-    <ons-fab id="start-fab">
-      <ons-icon icon="fa-play" (click)="start()"></ons-icon>
-    </ons-fab>
-    <ons-fab id="reset-fab">
-      <ons-icon icon="fa-undo"></ons-icon>
-    </ons-fab>
+    <div>
+      <p id="timer">0.00</p>
+    </div>
+    <div>
+      <ons-fab id="add-fab">
+        <ons-icon icon="md-plus"></ons-icon>
+      </ons-fab>
+      <ons-fab id="start-fab">
+        <ons-icon icon="fa-play" (click)="start()"></ons-icon>
+      </ons-fab>
+      <ons-fab id="reset-fab">
+        <ons-icon icon="fa-undo"></ons-icon>
+      </ons-fab>
+    </div>
   </div>
 </ons-page>
