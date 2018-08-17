@@ -43,6 +43,9 @@
         test_make_element();
       } else if (page.id === "test-page") {
         console.log("open test-page");
+        document.getElementById("back-test-btn").onclick = () => {
+          document.querySelector('#myNavigator').popPage();
+        }
       }
 
       /// to show the result of the test
@@ -50,7 +53,7 @@
 
       } else {
         pushed = true;
-      document.querySelector('#myNavigator').pushPage('test.html');
+        document.querySelector('#myNavigator').pushPage('test.html');
       }
     });
 
