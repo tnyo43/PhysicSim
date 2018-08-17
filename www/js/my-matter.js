@@ -56,6 +56,19 @@ let rect = (x, y, width, height, color) => {
   });
 }
 
+let circ = (x, y, r, color) => {
+  return Bodies.circle(x, y, r,
+  {
+    isStatic: false,
+    inertia: Infinity,
+    render : {
+      fillStyle: color,
+      strokeStyle: '#000000',
+      lineWidth: 0,  
+    }
+  });
+}
+
 let is_gravity_active = () => {
   return engine.world.gravity.y;
 }

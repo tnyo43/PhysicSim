@@ -35,6 +35,7 @@ let init = (canvas) => {
     if (new Date().getTime() - last_mousedown < 200) {
       selected_object = e.source.body;
       if (selected_object) {
+        remember_positions();
         document.getElementById("object-select-fukidashi").style.display = "block";
       }
     }
@@ -233,6 +234,30 @@ let add_element_to_world = (obj) => {
     else {
       /// 警告文を見せる
     }
+}
+
+let change_shape = (shape) => {
+  console.log(selected_object);
+  if (shape == "circ" && selected_object.label == "Rectangle Body") {
+    var l = objects.length;
+    delete_object(selected_object);
+    if (l-objects.length==1) {
+      var p = selected_object.position;
+      var v = selected_object.vertices;
+      r = Math.min(Math.sqrt(Math.pow(v[0].x-v[1].x,2)+Math.pow(v[0].y-v[1].y, 2)),Math.sqrt(Math.pow(v[1].x-v[2].x,2)+Math.pow(v[1].y-v[2].y,2)))/2;
+      selected_object = circ(p.x, p.y, r, selected_object.render.fillStyle)
+      add_object(selected_object);
+    }
+  } else if (shape == "rect" && selected_object.label == "Circle Body") {
+    var l = objects.length;
+    delete_object(selected_object);
+    if (l-objects.length==1) {
+      var p = selected_object.position;
+      var r = selected_object.circleRadius;
+      selected_object = rect(p.x-r, p.y-r, 2*r, 2*r,selected_object.render.fillStyle)
+      add_object(selected_object);
+    }
+  }
 }
 
 let update_gravity = () => {
