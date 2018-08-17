@@ -427,7 +427,7 @@ jasmineRequire.HtmlReporter = function(j$) {
       var oldReporter = find('');
 
       if(oldReporter) {
-        getContainer().removeChild(oldReporter);
+        //getContainer().removeChild(oldReporter);
       }
     }
 
