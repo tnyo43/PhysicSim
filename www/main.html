@@ -126,4 +126,52 @@
       </ons-fab>
     </div>
   </div>
+
+  <div id="object-menu-div" class="css-fukidashi">
+    <div class="css-fukidashi">
+      <div class="fukidashi" id="object-select-fukidashi">
+        <div>
+          <ons-list>
+            <ons-list-item tappable>
+              <label class="left">
+                <ons-radio name="object-shape" input-id="rect" checked></ons-radio>
+              </label>
+              <label for="rect" class="center">
+                長方形
+              </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+              <label class="left">
+                <ons-radio name="object-shape" input-id="circle"></ons-radio>
+              </label>
+              <label for="circle" class="center">
+                円
+              </label>
+            </ons-list-item>
+          </ons-list>
+        </div>
+        <div>
+          <ons-button id="object-select-delete-btn">削除</ons-button>
+        </div>
+        <div>
+          <ons-button modifier="quiet" id="object-select-fukidashi-close">
+            <ons-icon icon="fa-close"></ons-icon>
+          </ons-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template id="delete-alert-dialog.html">
+    <ons-alert-dialog id="delete-alert-dialog" modifier="rowfooter">
+      <div class="alert-dialog-title">オブジェクトを削除</div>
+      <div class="alert-dialog-content">
+        選択したオブジェクトを削除しますか？
+      </div>
+      <div class="alert-dialog-footer">
+        <ons-alert-dialog-button id="select-delete-no" onclick="delete_select('no')">いいえ</ons-alert-dialog-button>
+        <ons-alert-dialog-button id="select-delete-yes" onclick="delete_select('yes')">はい</ons-alert-dialog-button>
+      </div>
+    </ons-alert-dialog>
+  </template>
 </ons-page>

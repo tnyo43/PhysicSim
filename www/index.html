@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
   <link rel="stylesheet" href="lib/onsenui/css/onsen-css-components.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/fukidashi.css">
 
   <script>
     ons.bootstrap()
@@ -40,7 +41,7 @@
         start_app(document.getElementById("matter-canvas"));
         app_default_setting();
         //test_start();
-        test_make_element();
+        //test_make_element();
       } else if (page.id === "test-page") {
         console.log("open test-page");
         document.getElementById("back-test-btn").onclick = () => {
@@ -53,7 +54,7 @@
 
       } else {
         pushed = true;
-        document.querySelector('#myNavigator').pushPage('test.html');
+        //document.querySelector('#myNavigator').pushPage('test.html');
       }
     });
 

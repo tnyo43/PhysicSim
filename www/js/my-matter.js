@@ -74,6 +74,20 @@ let add_object = (obj) => {
   default_positions.push(Vector.clone(obj.position));
 }
 
+let delete_object = (obj) => {
+  for (var i in objects) {
+    if (obj === objects[i]) {
+      objects.splice(i, 1);
+      velocities.splice(i, 1);
+      default_velocities.splice(i, 1);
+      default_positions.splice(i, 1);
+      break;
+    }
+  }
+  console.log(objects);
+  reset();
+}
+
 let set_velocity = (obj, velocity) => {
   for (var i in objects) {
     if (obj === objects[i]) {
@@ -94,4 +108,10 @@ let set_position = (obj, position) => {
     }
   }
   throw Exception;
+}
+
+let remember_positions = () => {
+  for (var i in objects) {
+    default_positions[i] = Vector.clone(objects[i].position);
+  }
 }

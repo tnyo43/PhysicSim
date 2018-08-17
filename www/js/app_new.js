@@ -12,6 +12,10 @@ const OBJECT_MAX = 20;
 
 /// 物理エンジンを初期化
 /// オブジェクトも消去
+
+/// ダブルクリックの判定用
+let last_mousedown = null;
+let selected_object = null;
 let init = (canvas) => {
   engine = init_engine(canvas, WIDTH, HEIGHT);
   update_fence();
@@ -28,20 +32,21 @@ let init = (canvas) => {
   });
 
   Events.on(mouseConstraint, "mousedown", (e) => {
-    console.log("mouse down");
-    //reset();
+    if (new Date().getTime() - last_mousedown < 200) {
+      selected_object = e.source.body;
+      if (selected_object) {
+        document.getElementById("object-select-fukidashi").style.display = "block";
+      }
+    }
+    last_mousedown = new Date().getTime();
   });
   Events.on(mouseConstraint, "startdrag", (e) => {
-    console.log(e.body);
-    console.log("start drag");
+
   });
   Events.on(mouseConstraint, "enddrag", (e) => {
-    console.log(e);
     if (e.body) {
       Body.setVelocity(e.body, Vector.create(0, 0));
     }
-    //start();
-    console.log("end drag");
   });
 
   World.add(engine.world, mouseConstraint);
@@ -110,7 +115,7 @@ let start_fab
 let reset_btn;
 let reset_fab;
 let add_fab;
-
+let delete_dialog;
 
 
 let is_running;
@@ -124,6 +129,8 @@ let start = () => {
   }
   engine.world.gravity.y = g;
   is_running = true;
+
+  if (is_first_run) remember_positions();
 
   for (var i in objects) {
     if (is_first_run){
@@ -186,6 +193,33 @@ let start_app = (canvas) => {
   add_fab = document.getElementById("add-fab");
   add_fab.onclick = () => {
     add_element_to_world(rect(10, 20, 30, 40));
+  }
+
+  document.getElementById("object-select-fukidashi-close").onclick = () => {
+    document.getElementById("object-select-fukidashi").style.display = "none";
+    selected_object = null;
+  }
+
+  delete_dialog = document.getElementById('delete-alert-dialog');
+  document.getElementById("object-select-delete-btn").onclick = () => {
+    if (delete_dialog) {
+      delete_dialog.show();
+    } else {
+      ons.createElement('delete-alert-dialog.html', { append: true })
+        .then(function(dialog) {
+          delete_dialog = dialog;
+          dialog.show();
+        })
+    }
+  }
+}
+
+let delete_select = (s) => {
+  document.getElementById('delete-alert-dialog').hide();
+  if (s == "yes") {
+    delete_object(selected_object);
+    document.getElementById("object-select-fukidashi").style.display = "none";
+    selected_object = null;
   }
 }
 
