@@ -36,7 +36,8 @@ let init = (canvas) => {
       selected_object = e.source.body;
       if (selected_object) {
         remember_positions();
-        document.getElementById("object-select-fukidashi").style.display = "block";
+        document.getElementById("object-select-fukidashi").style.display = "flex";
+        set_resize_color();
       }
     }
     last_mousedown = new Date().getTime();
@@ -117,6 +118,10 @@ let reset_btn;
 let reset_fab;
 let add_fab;
 let delete_dialog;
+
+/// サイズ変更用
+let resize_height_slider;
+let resize_width_slider;
 
 
 let is_running;
@@ -238,10 +243,14 @@ let add_element_to_world = (obj) => {
 
 let change_shape = (shape) => {
   console.log(selected_object);
-  if (shape == "circ" && selected_object.label == "Rectangle Body") {
+
+  let remove_one = () => {
     var l = objects.length;
     delete_object(selected_object);
-    if (l-objects.length==1) {
+    return l-objects.length==1;
+  }
+  if (shape == "circ" && selected_object.label == "Rectangle Body") {
+    if (remove_one()) {
       var p = selected_object.position;
       var v = selected_object.vertices;
       r = Math.min(Math.sqrt(Math.pow(v[0].x-v[1].x,2)+Math.pow(v[0].y-v[1].y, 2)),Math.sqrt(Math.pow(v[1].x-v[2].x,2)+Math.pow(v[1].y-v[2].y,2)))/2;
@@ -249,15 +258,58 @@ let change_shape = (shape) => {
       add_object(selected_object);
     }
   } else if (shape == "rect" && selected_object.label == "Circle Body") {
-    var l = objects.length;
-    delete_object(selected_object);
-    if (l-objects.length==1) {
+    if (remove_one()) {
       var p = selected_object.position;
       var r = selected_object.circleRadius;
       selected_object = rect(p.x-r, p.y-r, 2*r, 2*r,selected_object.render.fillStyle)
       add_object(selected_object);
     }
+  } else if (shape == "resize") {
+    if (selected_object.label == "Rectangle Body") {
+      if (remove_one()) {
+        var p = selected_object.position;
+        var w = document.getElementById("resize-width-slider").value;
+        var h = document.getElementById("resize-hieght-slider").value;
+        selected_object = rect(p.x-w/2, p.y-h/2, w, h,selected_object.render.fillStyle)
+        add_object(selected_object);
+      }
+    } else if (selected_object.label == "Circle Body") {
+      if (remove_one()) {
+        var p = selected_object.position;
+        var r = document.getElementById("resize-hieght-slider").value;
+        selected_object = circ(p.x, p.y, r,selected_object.render.fillStyle)
+        add_object(selected_object);
+      }
+    }
   }
+  
+  var div = document.getElementById("preview-div");
+  if (selected_object.label == "Rectangle Body") {
+    console.log(div.style.borderRadius = '0%');
+    document.getElementById("resize-width-slider").disabled = false;
+  } else if (selected_object.label == "Circle Body") {
+    console.log(div.style.borderRadius = '50%');
+    document.getElementById("resize-width-slider").disabled = true;
+    div.style.width = div.style.height;
+  }
+}
+
+let resize_value_change = (c, v) => {
+  if (c == "h") {
+    document.getElementById("preview-div").style.height = v + "px";
+    if (selected_object.label == "Circle Body") {
+      document.getElementById("preview-div").style.width = v + "px";
+    }
+  } else if (c == "w") {
+    document.getElementById("preview-div").style.width = v + "px";
+  }
+}
+
+/// ポップアップの中のオブジェクトの色を変更
+let set_resize_color = () => {
+  var color = selected_object.render.fillStyle;
+  var div = document.getElementById("preview-div");
+  div.style.backgroundColor = color;
 }
 
 let update_gravity = () => {

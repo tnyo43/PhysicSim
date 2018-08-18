@@ -131,32 +131,47 @@
     <div class="css-fukidashi">
       <div class="fukidashi" id="object-select-fukidashi">
         <div>
-          <ons-list>
-            <ons-list-item tappable onclick="change_shape('rect')">
-              <label class="left">
-                <ons-radio name="object-shape" input-id="rect" checked></ons-radio>
-              </label>
-              <label for="rect" class="center">
-                長方形
-              </label>
-            </ons-list-item>
-            <ons-list-item tappable onclick="change_shape('circ')">
-              <label class="left">
-                <ons-radio name="object-shape" input-id="circle"></ons-radio>
-              </label>
-              <label for="circle" class="center">
-                円
-              </label>
-            </ons-list-item>
-          </ons-list>
+          <div>
+            <ons-list>
+              <ons-list-item tappable onclick="change_shape('rect')">
+                <label class="left">
+                  <ons-radio name="object-shape" input-id="rect" checked></ons-radio>
+                </label>
+                <label for="rect" class="center">
+                  長方形
+                </label>
+              </ons-list-item>
+              <ons-list-item tappable onclick="change_shape('circ')">
+                <label class="left">
+                  <ons-radio name="object-shape" input-id="circle"></ons-radio>
+                </label>
+                <label for="circle" class="center">
+                  円
+                </label>
+              </ons-list-item>
+            </ons-list>
+          </div>
+          <div>
+            <ons-button id="object-select-delete-btn">削除</ons-button>
+          </div>
+          <div>
+            <ons-button modifier="quiet" id="object-select-fukidashi-close">
+              <ons-icon icon="fa-close"></ons-icon>
+            </ons-button>
+          </div>
         </div>
         <div>
-          <ons-button id="object-select-delete-btn">削除</ons-button>
-        </div>
-        <div>
-          <ons-button modifier="quiet" id="object-select-fukidashi-close">
-            <ons-icon icon="fa-close"></ons-icon>
-          </ons-button>
+          <div id="resize-div">
+            <div id="preview-div">
+            </div>
+            <div id="resize-slider-div">
+              <ons-range id="resize-hieght-slider" class="shape-slider" oninput="resize_value_change('h', this.value);"></ons-range>
+              <ons-range id="resize-width-slider" class="shape-slider" oninput="resize_value_change('w', this.value);"></ons-range>
+            </div>
+          </div>
+          <div>
+            <ons-button id="resize-determine-btn" onclick="change_shape('resize')">変更</ons-button>
+          </div>
         </div>
       </div>
     </div>
