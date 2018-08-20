@@ -112,7 +112,8 @@ describe("物理エンジンの環境", function() {
       
       it("リスタートを押すと保存された速度になる", function() {
         set_velocity(obj, Vector.create(10, 0));
-        Body.setVelocity(obj, Vector.create(0, 20));      start();
+        Body.setVelocity(obj, Vector.create(0, 20));
+        start();
         stop("restart");
         expect(obj.velocity.x).toBe(0);
         start();
@@ -137,9 +138,10 @@ describe("物理エンジンの環境", function() {
 
       it("リセットを押すと元の位置に戻る", function() {
         set_position(obj, Vector.create(30, 40));
-        Body.setPosition(obj, Vector.create(50, 60));   
+        Body.setPosition(obj, Vector.create(50, 60));
         expect(obj.position.x).toBe(50);  
         expect(obj.position.y).toBe(60);
+        
         reset();
         expect(obj.position.x).toBe(30);
         expect(obj.position.y).toBe(40);

@@ -76,10 +76,9 @@ let reset = () => {
   World.add(engine.world, mouseConstraint);
   update_fence();
 
-  for (var i in objects) {
-    World.add(engine.world, [objects[i]]);
-    Body.setPosition(objects[i], Vector.clone(default_positions[i]));
-    Body.setVelocity(objects[i], Vector.create(0,0));
+  for (var i in object_infos) {
+    World.add(engine.world, [object_infos[i].obj]);
+    object_infos[i].reset();
   }
   is_first_run = true;
   simulate_time = 0;
@@ -105,6 +104,8 @@ let clear = () => {
   velocities = [];
   default_velocities = [];
   default_positions = [];
+
+  object_infos = [];
   
   simulate_time = 0;
   start_at = null;
@@ -138,12 +139,8 @@ let start = () => {
 
   if (is_first_run) remember_positions();
 
-  for (var i in objects) {
-    if (is_first_run){
-      velocities[i] = Vector.clone(default_velocities[i]);
-    } 
-    Body.setVelocity(objects[i], velocities[i]);
-  }
+  for (var i in object_infos)
+    object_infos[i].set_start(is_first_run);  
   is_first_run = false;
 
   start_at = new Date().getTime();

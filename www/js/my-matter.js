@@ -78,6 +78,8 @@ let velocities = [];
 let default_velocities = [];
 let default_positions = [];
 
+let object_infos = [];
+
 let add_object = (obj) => {
   World.add(engine.world, [obj]);
 
@@ -85,15 +87,20 @@ let add_object = (obj) => {
   velocities.push(Vector.create(0,0));
   default_velocities.push(Vector.create(0,0));
   default_positions.push(Vector.clone(obj.position));
+  object_infos.push(
+    new ObjectInfo(obj, Vector.create(0, 0), Vector.create(0, 0), Vector.clone(obj.position))
+  );
 }
 
 let delete_object = (obj) => {
-  for (var i in objects) {
-    if (obj === objects[i]) {
+  for (var i in object_infos) {
+    if (obj === object_infos[i].obj) {
       objects.splice(i, 1);
       velocities.splice(i, 1);
       default_velocities.splice(i, 1);
       default_positions.splice(i, 1);
+
+      object_infos.splice(i, 1);
       break;
     }
   }
@@ -102,10 +109,11 @@ let delete_object = (obj) => {
 }
 
 let set_velocity = (obj, velocity) => {
-  for (var i in objects) {
-    if (obj === objects[i]) {
+  for (var i in object_infos) {
+    if (object_infos[i].is_info_of(obj)) {
       velocities[i] = Vector.create(0,0);
       default_velocities[i] = velocity;
+      object_infos[i].default_velocity = velocity;
       return;
     }
   }
@@ -113,10 +121,10 @@ let set_velocity = (obj, velocity) => {
 }
 
 let set_position = (obj, position) => {
-  for (var i in objects) {
-    if (obj === objects[i]) {
-      Body.setPosition(obj, position);
-      default_positions[i] = position;
+  for (var i in object_infos) {
+    if (object_infos[i].is_info_of(obj)) {
+      object_infos[i].position = position;
+      object_infos[i].reset();
       return;
     }
   }
