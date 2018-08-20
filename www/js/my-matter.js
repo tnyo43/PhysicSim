@@ -73,20 +73,11 @@ let is_gravity_active = () => {
   return engine.world.gravity.y;
 }
 
-let objects = [];
-let velocities = [];
-let default_velocities = [];
-let default_positions = [];
-
 let object_infos = [];
 
 let add_object = (obj) => {
   World.add(engine.world, [obj]);
 
-  objects.push(obj);
-  velocities.push(Vector.create(0,0));
-  default_velocities.push(Vector.create(0,0));
-  default_positions.push(Vector.clone(obj.position));
   object_infos.push(
     new ObjectInfo(obj, Vector.create(0, 0), Vector.create(0, 0), Vector.clone(obj.position))
   );
@@ -95,11 +86,6 @@ let add_object = (obj) => {
 let delete_object = (obj) => {
   for (var i in object_infos) {
     if (obj === object_infos[i].obj) {
-      objects.splice(i, 1);
-      velocities.splice(i, 1);
-      default_velocities.splice(i, 1);
-      default_positions.splice(i, 1);
-
       object_infos.splice(i, 1);
       break;
     }
@@ -132,7 +118,7 @@ let set_position = (obj, position) => {
 }
 
 let remember_positions = () => {
-  for (var i in objects) {
-    default_positions[i] = Vector.clone(objects[i].position);
+  for (var i in object_infos) {
+    object_infos[i].restore_position();
   }
 }

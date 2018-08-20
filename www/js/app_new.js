@@ -150,9 +150,8 @@ let stop = () => {
   engine.world.gravity.y = 0;
   is_running = false;
 
-  for (var i in objects) {
-    velocities[i] = Vector.clone(objects[i].velocity);
-    Body.setVelocity(objects[i], Vector.create(0,0));
+  for (var i in object_infos) {
+    object_infos[i].stop();
   }
 
   simulate_time += new Date().getTime() - start_at;
@@ -228,7 +227,7 @@ let delete_select = (s) => {
 
 let add_element_to_world = (obj) => {
     if (is_first_run) {
-      if (objects.length < OBJECT_MAX) add_object(obj);
+      if (object_infos.length < OBJECT_MAX) add_object(obj);
       else{
         /// 警告文を見せる
       }
@@ -242,7 +241,7 @@ let change_shape = (shape) => {
   console.log(selected_object);
 
   let remove_one = () => {
-    var l = objects.length;
+    var l = object_infos.length;
     delete_object(selected_object);
     return l-objects.length==1;
   }

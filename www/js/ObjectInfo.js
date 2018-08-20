@@ -10,7 +10,11 @@ class ObjectInfo{
     }
 
     this.set_start = (is_first_run) => {
-      if (is_first_run) this.velocity = this.default_velocity;
+      console.log(is_first_run);
+      if (is_first_run) {
+        this.velocity = this.default_velocity;
+      }
+      console.log(this.velocity);
       Body.setVelocity(this.obj, this.velocity);
     }
 
@@ -19,12 +23,18 @@ class ObjectInfo{
     }
 
     this.stop = () => {
+      this.velocity = Vector.clone(this.obj.velocity)
       Body.setVelocity(this.obj, Vector.create(0,0));
+
     }
 
     this.reset = () => {
       Body.setPosition(this.obj, Vector.clone(this.default_position));
       Body.setVelocity(this.obj, Vector.create(0,0));
+    }
+
+    this.restore_position = () => {
+      this.default_position = Vector.clone(this.obj.position);
     }
   }
 
@@ -50,7 +60,7 @@ class ObjectInfo{
   }
 
   get velocity () {
-    return Vector.clone(this._velocity);
+    return this._velocity;
   }
 
   set position (p) {

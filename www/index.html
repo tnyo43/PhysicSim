@@ -40,14 +40,14 @@
         console.log("open main-page");
         start_app(document.getElementById("matter-canvas"));
         app_default_setting();
-        //test_start();
+        test_start();
         test_make_element();
         setTimeout(() => {
         if (!pushed) {
           pushed = true;
           document.querySelector('#myNavigator').pushPage('test.html');
         }
-        }, 100);
+        }, 10);
       } else if (page.id === "test-page") {
         console.log("open test-page");
         document.getElementById("back-test-btn").onclick = () => {
