@@ -8,6 +8,44 @@ let FENCES = [
     static_black(0, 0, WIDTH, 5), // 下
 ];
 
+let close_fukidashi = () => {
+  document.getElementById("object-select-fukidashi").style.display = "none";
+  document.getElementById("fab-div").style.display = "flex";
+}
+
+let show_fukidashi = () => {
+  var idx = 0;
+  for (idx = 0; idx < object_infos.length; idx++) {
+    if (object_infos[idx].is_info_of(selected_object)){
+      remember_positions();
+      document.getElementById("object-select-fukidashi").style.display = "flex";
+      document.getElementById("fab-div").style.display = "none";
+
+
+      console.log(object_infos[idx].shape)
+      if (object_infos[idx].shape=="rect") {
+        document.getElementById("radio-shape-rect").checked=true;
+        update_preview();
+      } else {
+        document.getElementById("radio-shape-circ").checked=true;
+        update_preview();
+      }
+
+      set_resize_color();
+      let l = object_infos[idx].get_last_velo_input();
+      console.log(l);
+      document.getElementById("velo-input1").value = l[1][0];
+      document.getElementById("velo-input2").value = l[1][1];
+      if (l[0] == 1) { 
+        document.getElementById("velo-mode1").checked = true;
+      } else {
+        document.getElementById("velo-mode2").checked = true;
+      }
+      break;
+    }
+  }
+}
+
 const OBJECT_MAX = 20;
 
 /// 物理エンジンを初期化
@@ -32,12 +70,10 @@ let init = (canvas) => {
   });
 
   Events.on(mouseConstraint, "mousedown", (e) => {
-    if (new Date().getTime() - last_mousedown < 200) {
+    if (!is_running && new Date().getTime() - last_mousedown < 200) {
       selected_object = e.source.body;
       if (selected_object) {
-        remember_positions();
-        document.getElementById("object-select-fukidashi").style.display = "flex";
-        set_resize_color();
+        show_fukidashi();
       }
     }
     last_mousedown = new Date().getTime();
@@ -124,6 +160,8 @@ let is_running;
 let is_first_run = true;
 
 let start = () => {
+  close_fukidashi();
+
   try{
     World.remove(engine.world, mouseConstraint);
   } catch (Exception) {
@@ -193,7 +231,7 @@ let start_app = (canvas) => {
   }
 
   document.getElementById("object-select-fukidashi-close").onclick = () => {
-    document.getElementById("object-select-fukidashi").style.display = "none";
+    close_fukidashi();
     selected_object = null;
   }
 
@@ -215,7 +253,7 @@ let delete_select = (s) => {
   document.getElementById('delete-alert-dialog').hide();
   if (s == "yes") {
     delete_object(selected_object);
-    document.getElementById("object-select-fukidashi").style.display = "none";
+    close_fukidashi();
     selected_object = null;
   }
 }
@@ -269,7 +307,7 @@ let change_shape = (shape, mode) => {
     } else if (selected_object.label == "Circle Body") {
       if (remove_one()) {
         var p = selected_object.position;
-        var r = document.getElementById("resize-hieght-slider").value;
+        var r = document.getElementById("resize-hieght-slider").value/2;
         selected_object = circ(p.x, p.y, r,selected_object.render.fillStyle)
         add_object(selected_object);
       }
@@ -278,15 +316,19 @@ let change_shape = (shape, mode) => {
   
   console.log("change shape done", mode, mode!="test");
   if (mode != "test") {
-    var div = document.getElementById("preview-div");
-    if (selected_object.label == "Rectangle Body") {
-      console.log(div.style.borderRadius = '0%');
-      document.getElementById("resize-width-slider").disabled = false;
-    } else if (selected_object.label == "Circle Body") {
-      console.log(div.style.borderRadius = '50%');
-      document.getElementById("resize-width-slider").disabled = true;
-      div.style.width = div.style.height;
-    }
+    update_preview();
+  }
+}
+
+let update_preview = () => {
+  var div = document.getElementById("preview-div");
+  if (selected_object.label == "Rectangle Body") {
+    console.log(div.style.borderRadius = '0%');
+    document.getElementById("resize-width-slider").disabled = false;
+  } else if (selected_object.label == "Circle Body") {
+    console.log(div.style.borderRadius = '50%');
+    document.getElementById("resize-width-slider").disabled = true;
+    div.style.width = div.style.height;
   }
 }
 
@@ -348,14 +390,15 @@ let update_velocity = () => {
       )
 
     }
+    object_infos[i].set_last_velo_input(
+      (document.getElementById("velo-mode1").checked) ? 1 : 2,
+      [document.getElementById("velo-input1").value, document.getElementById("velo-input2").value]
+    );
   }
+
 
 }
 
 let update_velocity_input = () => {
 
-  /*
-  document.getElementById("velo-input1").value = "";
-  document.getElementById("velo-input2").value = "";
-  */
 }

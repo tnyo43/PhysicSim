@@ -35,6 +35,18 @@ class ObjectInfo{
     this.restore_position = () => {
       this.default_position = Vector.clone(this.obj.position);
     }
+
+    this.last_vel_input_mode = 1;
+    this.last_vel_input_val = [0, 0];
+    this.set_last_velo_input = (mode, val) => {
+      this.last_vel_input_mode = mode;
+      for (var i in val) if (val[i] == "") val[i] = 0;
+      this.last_vel_input_val = val;
+    }
+
+    this.get_last_velo_input = () => {
+      return [this.last_vel_input_mode, this.last_vel_input_val];
+    }
   }
 
   set default_velocity (dv) {
