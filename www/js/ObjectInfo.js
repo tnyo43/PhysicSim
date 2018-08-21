@@ -1,20 +1,19 @@
 class ObjectInfo{
-  constructor(obj, v, dv, dp) {
+  constructor(obj, v, dv, dp, shape) {
     this.obj = obj;
     this.velocity = v;
     this.default_velocity = dv;
     this.default_position = dp;
+    this.shape = shape;
 
     this.is_info_of = (obj) => {
       return this.obj === obj;
     }
 
     this.set_start = (is_first_run) => {
-      console.log(is_first_run);
       if (is_first_run) {
         this.velocity = this.default_velocity;
       }
-      console.log(this.velocity);
       Body.setVelocity(this.obj, this.velocity);
     }
 
@@ -69,5 +68,14 @@ class ObjectInfo{
 
   get position () {
     return this.default_position;
+  }
+
+  set shape (s) {
+    if (s == undefined || s == null) this._shape = "rect";
+    else this._shape = s;
+  }
+
+  get shape () {
+    return this._shape;
   }
 }

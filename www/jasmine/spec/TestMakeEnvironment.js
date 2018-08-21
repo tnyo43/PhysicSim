@@ -45,4 +45,28 @@ function test_make_element () {
       expect(object_infos.length).toBe(OBJECT_MAX);
     });
   });
+
+  describe("選択したオブジェクトに変更を加える", function () {
+    var idx;
+    beforeEach(function() {
+      use_gravity.checked = true;
+      update_gravity();
+      selected_object = rect(10, 10, 30, 10, '#ff0000');
+      add_object(selected_object);
+
+      idx = 0;
+      for (idx = 0; idx < object_infos.length; idx++) {
+        if (object_infos[idx].is_info_of(selected_object)) break;
+      }
+    });
+    it("選んだオブジェクトの形を変更する", function () {
+      expect(1).toBe(1);
+      change_shape("circ", "test");
+      expect(object_infos[idx].shape).toBe("circ");
+      expect(selected_object.circleRadius).toBe(5);
+
+      change_shape("rect", "test");
+      expect(object_infos[idx].shape).toBe("rect");
+    });
+  });
 }

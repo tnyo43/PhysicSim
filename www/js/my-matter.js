@@ -75,11 +75,11 @@ let is_gravity_active = () => {
 
 let object_infos = [];
 
-let add_object = (obj) => {
+let add_object = (obj, shape) => {
   World.add(engine.world, [obj]);
 
   object_infos.push(
-    new ObjectInfo(obj, Vector.create(0, 0), Vector.create(0, 0), Vector.clone(obj.position))
+    new ObjectInfo(obj, Vector.create(0, 0), Vector.create(0, 0), Vector.clone(obj.position), shape)
   );
 }
 
@@ -90,7 +90,6 @@ let delete_object = (obj) => {
       break;
     }
   }
-  console.log(objects);
   reset();
 }
 

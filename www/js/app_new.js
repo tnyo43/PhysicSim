@@ -100,11 +100,6 @@ let clear = () => {
   World.add(engine.world, mouseConstraint);
   update_fence();
 
-  objects = [];
-  velocities = [];
-  default_velocities = [];
-  default_positions = [];
-
   object_infos = [];
   
   simulate_time = 0;
@@ -237,21 +232,23 @@ let add_element_to_world = (obj) => {
     }
 }
 
-let change_shape = (shape) => {
+let change_shape = (shape, mode) => {
   console.log(selected_object);
 
   let remove_one = () => {
     var l = object_infos.length;
     delete_object(selected_object);
-    return l-objects.length==1;
+    return l-object_infos.length==1;
   }
+  console.log(remove_one);
+  console.log(shape, selected_object.label, shape == "circ" && selected_object.label == "Rectangle Body");
   if (shape == "circ" && selected_object.label == "Rectangle Body") {
     if (remove_one()) {
       var p = selected_object.position;
       var v = selected_object.vertices;
       r = Math.min(Math.sqrt(Math.pow(v[0].x-v[1].x,2)+Math.pow(v[0].y-v[1].y, 2)),Math.sqrt(Math.pow(v[1].x-v[2].x,2)+Math.pow(v[1].y-v[2].y,2)))/2;
       selected_object = circ(p.x, p.y, r, selected_object.render.fillStyle)
-      add_object(selected_object);
+      add_object(selected_object, shape="circ");
     }
   } else if (shape == "rect" && selected_object.label == "Circle Body") {
     if (remove_one()) {
@@ -279,14 +276,17 @@ let change_shape = (shape) => {
     }
   }
   
-  var div = document.getElementById("preview-div");
-  if (selected_object.label == "Rectangle Body") {
-    console.log(div.style.borderRadius = '0%');
-    document.getElementById("resize-width-slider").disabled = false;
-  } else if (selected_object.label == "Circle Body") {
-    console.log(div.style.borderRadius = '50%');
-    document.getElementById("resize-width-slider").disabled = true;
-    div.style.width = div.style.height;
+  console.log("change shape done", mode, mode!="test");
+  if (mode != "test") {
+    var div = document.getElementById("preview-div");
+    if (selected_object.label == "Rectangle Body") {
+      console.log(div.style.borderRadius = '0%');
+      document.getElementById("resize-width-slider").disabled = false;
+    } else if (selected_object.label == "Circle Body") {
+      console.log(div.style.borderRadius = '50%');
+      document.getElementById("resize-width-slider").disabled = true;
+      div.style.width = div.style.height;
+    }
   }
 }
 
@@ -328,4 +328,34 @@ let app_default_setting = () => {
   update_gravity();
   obj = rect(100, 100, 100, 100, '#ff0000');
   add_object(obj);
+}
+
+let update_velocity = () => {
+  for (var i in object_infos) {
+    if (!object_infos[i].is_info_of(selected_object)) continue;
+
+    if (document.getElementById("velo-mode1").checked) {
+      object_infos[i].default_velocity = Vector.create(
+        document.getElementById("velo-input1").value,
+        -Number(document.getElementById("velo-input2").value)
+      )
+    } else {
+      let v = Number(document.getElementById("velo-input1").value);
+      let r = -Number(document.getElementById("velo-input2").value)/180*Math.PI;
+
+      object_infos[i].default_velocity = Vector.create(
+        v*Math.cos(r), v*Math.sin(r)
+      )
+
+    }
+  }
+
+}
+
+let update_velocity_input = () => {
+
+  /*
+  document.getElementById("velo-input1").value = "";
+  document.getElementById("velo-input2").value = "";
+  */
 }
